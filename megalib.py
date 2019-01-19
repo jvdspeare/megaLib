@@ -2,6 +2,7 @@ import requests
 import time
 
 env_url = ['https://api.megaport.com', 'https://api-staging.megaport.com']
+netdesign_url = {True: '/v2/networkdesign/validate', False: '/v2/networkdesign/buy'}
 
 
 def env(prod):
@@ -60,9 +61,9 @@ def ix(header, loc_id, prod=True):
     return get(url, header)
 
 
-# validate an order for a megaport
-def port_validate(header, loc_id, name, speed, market, term=1, prod=True):
-    url = env(prod) + '/v2/networkdesign/validate'
+# megaport
+def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
              'locationUid': 'null',
@@ -76,44 +77,9 @@ def port_validate(header, loc_id, name, speed, market, term=1, prod=True):
     return post(url, header, body)
 
 
-# place an order for a megaport
-def port_buy(header, loc_id, name, speed, market, term=1, prod=True):
-    url = env(prod) + '/v2/networkdesign/buy'
-    body = [{'locationId': loc_id,
-             'term': term,
-             'locationUid': 'null',
-             'productName': name,
-             'productType': 'MEGAPORT',
-             'createDate': int(time.time()),
-             'portSpeed': speed,
-             'virtual': 'false',
-             'market': market
-             }]
-    return post(url, header, body)
-
-
-# validate an order for a mcr
-def mcr_validate(header, loc_id, name, speed, market, asn=133937, term=1, prod=True):
-    url = env(prod) + '/v2/networkdesign/validate'
-    body = [{'locationId': loc_id,
-             'term': term,
-             'locationUid': 'null',
-             'productName': name,
-             'productType': 'MEGAPORT',
-             'createDate': int(time.time()),
-             'portSpeed': speed,
-             'virtual': 'true',
-             'market': market,
-             'config': {
-                 'mcrAsn': asn
-             }
-             }]
-    return post(url, header, body)
-
-
-# place an order for a mcr
-def mcr_buy(header, loc_id, name, speed, market, asn=133937, term=1, prod=True):
-    url = env(prod) + '/v2/networkdesign/buy'
+# mcr
+def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
              'locationUid': 'null',
