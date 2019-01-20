@@ -25,7 +25,7 @@ def post(url, header, body):
     return response
 
 
-# login and if successful return header to be used for subsequent api calls
+# https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=None, prod=True):
     if tfa is None:
         response = requests.post(env(prod)
@@ -43,25 +43,42 @@ def login(user, pasw, tfa=None, prod=True):
         return response
 
 
-# locations end point will return a list of data centre locations and information pertaining to each
+# https://dev.megaport.com/#security-login-with-token
+def login_token(token, prod=True):
+    return requests.post(env(prod) + '/v2/login/' + token)
+
+
+# https://dev.megaport.com/#security-logout
+def logout(token, prod=True):
+    return requests.get(env(prod) + '/v2/logout/' + token)
+
+
+# https://dev.megaport.com/#security-change-password
+def change_pasw(header, old_pasw, new_pasw, prod=True):
+    return requests.post(env(prod)
+                         + '/v2/password/change?oldPassword=' + old_pasw + '&newPassword=' + new_pasw, headers=header)
+
+
+# https://dev.megaport.com/#lists-used-for-ordering-locations
 def locations(header, prod=True):
     url = env(prod) + '/v2/locations'
     return get(url, header)
 
 
-# partner end point will return a list of public partner megaports and information pertaining to each
+# https://dev.megaport.com/#lists-used-for-ordering-partner-megaports
 def partner(header, prod=True):
     url = env(prod) + '/v2/dropdowns/partner/megaports'
     return get(url, header)
 
 
-# ix end point will return a list of all available ix types for a given location
-def ix(header, loc_id, prod=True):
+# https://dev.megaport.com/#lists-used-for-ordering-internet-exchanges-ix
+def ix_locations(header, loc_id, prod=True):
     url = env(prod) + '/v2/product/ix/types?locationId=' + str(loc_id)
     return get(url, header)
 
 
-# megaport
+# https://dev.megaport.com/#standard-api-orders-validate-port-order
+# https://dev.megaport.com/#standard-api-orders-buy-port
 def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
@@ -77,7 +94,8 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
     return post(url, header, body)
 
 
-# mcr
+# https://dev.megaport.com/#standard-api-orders-validate-mcr-order
+# https://dev.megaport.com/#standard-api-orders-buy-mcr
 def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
@@ -91,6 +109,42 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
              'market': market,
              'config': {
                  'mcrAsn': asn
-             }
-             }]
+             }}]
+    return post(url, header, body)
+
+
+# https://dev.megaport.com/#standard-api-orders-validate-ix-order
+# https://dev.megaport.com/#standard-api-orders-buy-ix
+def ix(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
+    body = [{'locationId': loc_id,
+             'term': term,
+             'locationUid': 'null',
+             'productName': name,
+             'productType': 'MEGAPORT',
+             'createDate': int(time.time()),
+             'portSpeed': speed,
+             'virtual': 'true',
+             'market': market,
+             'config': {
+                 'mcrAsn': asn
+             }}]
+    return post(url, header, body)
+
+
+# https://dev.megaport.com/#standard-api-orders-validate-vxc-order
+# https://dev.megaport.com/#standard-api-orders-buy-vxc
+def vxc(header, prod_id, b_prod_id, name, speed, vlan='null', b_vlan='null', validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
+    body = [{'productUid': prod_id,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': {
+                     'vlan': vlan
+                 },
+                 'bEnd': {
+                     'productUid': b_prod_id,
+                     'vlan': b_vlan
+                 }}]}]
     return post(url, header, body)
