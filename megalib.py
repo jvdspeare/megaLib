@@ -36,11 +36,9 @@ def login(user, pasw, tfa=None, prod=True):
                                  + str(tfa))
     if response.status_code == 200:
         json = response.json()
-        token = json["data"]["token"]
-        header = {'X-Auth-Token': token, 'Content-Type': 'application/json'}
-        return header
-    else:
-        return response
+        login.token = json['data']['token']
+        login.header = {'X-Auth-Token': login.token, 'Content-Type': 'application/json'}
+    return response
 
 
 # https://dev.megaport.com/#security-login-with-token
@@ -91,7 +89,12 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'virtual': 'false',
              'market': market
              }]
-    return post(url, header, body)
+    response = post(url, header, body)
+    if validate is False and x.status_code == 200:
+        json = response.json()
+        print(json)
+        port.uid = json['data'][0]['technicalServiceUid']
+    return response
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
