@@ -88,13 +88,13 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'market': market
              }]
     response = post(url, header, body)
-    json = response.json()
-    if validate is False and response.status_code == 200:
-        return response.status_code, response, json['data'][0]['price']['monthlyRate'], json['data'][0]['technicalServiceUid']
-    elif validate is True and response.status_code == 200:
-        return response.status_code, response, json['data'][0]['price']['monthlyRate']
+    json = response[1].json()
+    if validate is False and response[0] == 200:
+        return response[0], response[1], json['data'][0]['price']['monthlyRate'], json['data'][0]['technicalServiceUid']
+    elif validate is True and response[0] == 200:
+        return response[0], response[1], json['data'][0]['price']['monthlyRate']
     else:
-        return response.status_code, response
+        return response
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
