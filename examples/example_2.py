@@ -8,6 +8,7 @@ x = megalib.login(input('enter username '), input('enter password '))
 if x[0] == 200:
     locations = megalib.locations(x[2])
     partner_ports = megalib.partner(x[2])
+
     # print the body of the response for both the locations and partner functions
     print(locations[1].json())
     print(partner_ports[1].json())
