@@ -90,7 +90,7 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
     response = post(url, header, body)
     json = response[1].json()
     if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate'], json['data'][0]['technicalServiceUid']
+        return response[0], response[1], json['data'][0]['technicalServiceUid']
     elif validate is True and response[0] == 200:
         return response[0], response[1], json['data'][0]['price']['monthlyRate']
     else:
