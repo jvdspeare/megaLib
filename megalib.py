@@ -20,35 +20,33 @@ def get(url, header):
 
 
 # api post method template
-def post(url, header, body):
+def post(url, header=None, body=None):
     response = requests.post(url, headers=header, json=body)
-    return response
+    return response.status_code, response
 
 
 # https://dev.megaport.com/#security-login-with-user-details
-def login(user, pasw, tfa=None, prod=True):
-    if tfa is None:
-        response = requests.post(env(prod)
-                                 + '/v2/login' + '?username=' + user + '&password=' + pasw)
+def login(user, pasw, tfa=0, prod=True):
+    url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
+    response = post(url)
+    if response[0] == 200:
+        json = response[1].json()
+        return response[0], response[1], {'X-Auth-Token': json['data']['token'], 'Content-Type': 'application/json'}, \
+            json['data']['token']
     else:
-        response = requests.post(env(prod)
-                                 + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword='
-                                 + str(tfa))
-    if response.status_code == 200:
-        json = response.json()
-        return response.status_code, response, {'X-Auth-Token': json['data']['token'], 'Content-Type': 'application/json'}
-    else:
-        return response.status_code, response
+        return response
 
 
 # https://dev.megaport.com/#security-login-with-token
 def login_token(token, prod=True):
-    return requests.post(env(prod) + '/v2/login/' + token)
+    url = env(prod) + '/v2/login/' + token
+    return post(url)
 
 
 # https://dev.megaport.com/#security-logout
 def logout(token, prod=True):
-    return requests.get(env(prod) + '/v2/logout/' + token)
+    url = env(prod) + '/v2/logout/' + token
+    return post(url)
 
 
 # https://dev.megaport.com/#security-change-password
@@ -92,11 +90,9 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
     response = post(url, header, body)
     json = response.json()
     if validate is False and response.status_code == 200:
-        return response.status_code, response, json['data'][0]['technicalServiceUid']
+        return response.status_code, response, json['data'][0]['price']['monthlyRate'], json['data'][0]['technicalServiceUid']
     elif validate is True and response.status_code == 200:
         return response.status_code, response, json['data'][0]['price']['monthlyRate']
-    elif response.status_code == 400:
-        return response.status_code, response, json['data']
     else:
         return response.status_code, response
 
