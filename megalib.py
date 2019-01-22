@@ -36,9 +36,9 @@ def login(user, pasw, tfa=None, prod=True):
                                  + str(tfa))
     if response.status_code == 200:
         json = response.json()
-        return response, {'X-Auth-Token': json['data']['token'], 'Content-Type': 'application/json'}
+        return response.status_code, response, {'X-Auth-Token': json['data']['token'], 'Content-Type': 'application/json'}
     else:
-        return response
+        return response.status_code, response
 
 
 # https://dev.megaport.com/#security-login-with-token
