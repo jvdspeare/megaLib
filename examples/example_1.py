@@ -18,5 +18,5 @@ if x[0] == 200:
 else:
     print('login unsuccessful')
     # the second object returned in the tuple ('x[1]') is always the entirety of the response data which has a number of
-    # objects, json is the response body.
+    # objects, json is the response body
     print(x[1].json())
