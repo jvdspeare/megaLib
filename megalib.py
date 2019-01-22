@@ -14,9 +14,9 @@ def env(prod):
 
 
 # api get method template
-def get(url, header):
+def get(url, header=None):
     response = requests.get(url, headers=header)
-    return response
+    return response.status_code, response
 
 
 # api post method template
@@ -46,13 +46,13 @@ def login_token(token, prod=True):
 # https://dev.megaport.com/#security-logout
 def logout(token, prod=True):
     url = env(prod) + '/v2/logout/' + token
-    return post(url)
+    return get(url)
 
 
 # https://dev.megaport.com/#security-change-password
 def change_pasw(header, old_pasw, new_pasw, prod=True):
-    return requests.post(env(prod)
-                         + '/v2/password/change?oldPassword=' + old_pasw + '&newPassword=' + new_pasw, headers=header)
+    url = env(prod) + '/v2/password/change?oldPassword=' + old_pasw + '&newPassword=' + new_pasw
+    return post(url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-locations
