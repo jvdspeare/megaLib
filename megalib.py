@@ -25,6 +25,17 @@ def post(url, header=None, body=None):
     return response.status_code, response
 
 
+# extended response
+def ext_response(response, validate, obj):
+    json = response[1].json()
+    if validate is False and response[0] == 200:
+        return response[0], response[1], json['data'][0][obj]
+    elif validate is True and response[0] == 200:
+        return response[0], response[1], json['data'][0]['price']['monthlyRate']
+    else:
+        return response
+
+
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
     url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
@@ -87,14 +98,7 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'virtual': 'false',
              'market': market
              }]
-    response = post(url, header, body)
-    json = response[1].json()
-    if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['technicalServiceUid']
-    elif validate is True and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate']
-    else:
-        return response
+    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
@@ -113,14 +117,7 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
              'config': {
                  'mcrAsn': asn
              }}]
-    response = post(url, header, body)
-    json = response[1].json()
-    if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['technicalServiceUid']
-    elif validate is True and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate']
-    else:
-        return response
+    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
@@ -136,14 +133,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
                  'rateLimit': speed,
                  "vlan": vlan
              }]}]
-    response = post(url, header, body)
-    json = response[1].json()
-    if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['technicalServiceUid']
-    elif validate is True and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate']
-    else:
-        return response
+    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
@@ -161,11 +151,4 @@ def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=Fa
                      'productUid': b_uid,
                      'vlan': b_vlan
                  }}]}]
-    response = post(url, header, body)
-    json = response[1].json()
-    if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['vxcJTechnicalServiceUid']
-    elif validate is True and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate']
-    else:
-        return response
+    return ext_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
