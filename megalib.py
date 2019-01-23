@@ -125,21 +125,25 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
 # https://dev.megaport.com/#standard-api-orders-buy-ix
-def ix(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, prod=True):
+def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
-    body = [{'locationId': loc_id,
-             'term': term,
-             'locationUid': 'null',
-             'productName': name,
-             'productType': 'MEGAPORT',
-             'createDate': int(time.time()),
-             'portSpeed': speed,
-             'virtual': 'true',
-             'market': market,
-             'config': {
-                 'mcrAsn': asn
-             }}]
-    return post(url, header, body)
+    body = [{'productUid': uid,
+             'associatedIxs': [{
+                 'productName': name,
+                 'networkServiceType': ix_name,
+                 'asn': asn,
+                 'macAddress': mac,
+                 'rateLimit': speed,
+                 "vlan": vlan
+             }]}]
+    response = post(url, header, body)
+    json = response[1].json()
+    if validate is False and response[0] == 200:
+        return response[0], response[1], json['data'][0]['technicalServiceUid']
+    elif validate is True and response[0] == 200:
+        return response[0], response[1], json['data'][0]['price']['monthlyRate']
+    else:
+        return response
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
