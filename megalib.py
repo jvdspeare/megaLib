@@ -116,7 +116,7 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
     response = post(url, header, body)
     json = response[1].json()
     if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate'], json['data'][0]['technicalServiceUid']
+        return response[0], response[1], json['data'][0]['technicalServiceUid']
     elif validate is True and response[0] == 200:
         return response[0], response[1], json['data'][0]['price']['monthlyRate']
     else:
@@ -144,9 +144,9 @@ def ix(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
 # https://dev.megaport.com/#standard-api-orders-buy-vxc
-def vxc(header, prod_id, b_prod_id, name, speed, vlan='null', b_vlan='null', validate=False, prod=True):
+def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
-    body = [{'productUid': prod_id,
+    body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
                  'rateLimit': speed,
@@ -154,7 +154,14 @@ def vxc(header, prod_id, b_prod_id, name, speed, vlan='null', b_vlan='null', val
                      'vlan': vlan
                  },
                  'bEnd': {
-                     'productUid': b_prod_id,
+                     'productUid': b_uid,
                      'vlan': b_vlan
                  }}]}]
-    return post(url, header, body)
+    response = post(url, header, body)
+    json = response[1].json()
+    if validate is False and response[0] == 200:
+        return response[0], response[1], json['data'][0]['vxcJTechnicalServiceUid']
+    elif validate is True and response[0] == 200:
+        return response[0], response[1], json['data'][0]['price']['monthlyRate']
+    else:
+        return response
