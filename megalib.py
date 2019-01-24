@@ -159,7 +159,7 @@ def service_key_lookup(header, uid=None, prod=True):
     if uid is None:
         url = env(prod) + '/v2/service/key'
     else:
-        url = env(prod) + '/v2/service/key' + '?UUID=' + uid
+        url = env(prod) + '/v2/service/key/' + uid
     return get(url, header)
 
 
@@ -182,5 +182,41 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, validate=False, prod=True):
+def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_type='private', auth_key='null',
+        cidr='null', cust_ip='null', aws_ip='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'partnerConfigs': {
+                     'connectType': 'AWS',
+                     'type': peering_type,
+                     'asn': asn,
+                     'ownerAccount': account_num,
+                     'authKey': auth_key,
+                     'prefixes': cidr,
+                     'customerIpAddress': cust_ip,
+                     'amazonIpAddress': aws_ip
+                 },
+                 'aEnd': {
+                     'vlan': vlan
+                 },
+                 'bEnd': {
+                     'productUid': b_uid
+                 }}]}]
+    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
+def azure_lookup(header, azure_key, prod=True):
+    url = env(prod) + '/v2/secure/Azure/' + azure_key
+    response = get(url, header)
+    json = response[1].json()
+    if response[0] == 200:
+        return response[0], response[1], json['data'][0]['bandwidth'], \
+               json['data'][0]['megaports'][0]['vxc'], json['data'][0]['megaports'][0]['productUid'], \
+               json['data'][0]['megaports'][1]['vxc'], json['data'][0]['megaports'][1]['productUid'], \
+               json['data'][0]['vlan']
+    else:
+        return response
