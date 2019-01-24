@@ -26,7 +26,7 @@ def post(url, header=None, body=None):
 
 
 # extended response
-def ext_response(response, validate, obj):
+def order_response(response, validate, obj):
     json = response[1].json()
     if validate is False and response[0] == 200:
         return response[0], response[1], json['data'][0][obj]
@@ -98,7 +98,7 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'virtual': 'false',
              'market': market
              }]
-    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
+    return order_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
@@ -117,7 +117,7 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
              'config': {
                  'mcrAsn': asn
              }}]
-    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
+    return order_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
@@ -133,7 +133,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
                  'rateLimit': speed,
                  "vlan": vlan
              }]}]
-    return ext_response(post(url, header, body), validate, 'technicalServiceUid')
+    return order_response(post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
@@ -151,4 +151,36 @@ def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=Fa
                      'productUid': b_uid,
                      'vlan': b_vlan
                  }}]}]
-    return ext_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
+# https://dev.megaport.com/#standard-api-orders-service-keys-get
+def service_key_lookup(header, uid=None, prod=True):
+    if uid is None:
+        url = env(prod) + '/v2/service/key'
+    else:
+        url = env(prod) + '/v2/service/key' + '?UUID=' + uid
+    return get(url, header)
+
+
+# https://dev.megaport.com/#standard-api-orders-service-keys-post
+def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='null', pre_approved='true',
+                active='true', s_time='null', f_time='null', prod=True):
+    url = env(prod) + '/v2/service/key'
+    body = [{'productUid': uid,
+             'vlan': vlan,
+             'singleUse': single_use,
+             'maxSpeed': max_speed,
+             'preApproved': pre_approved,
+             'description': desc,
+             'active': active,
+             'validFor': {
+                 'start': s_time,
+                 'end': f_time
+             }}]
+    return port(url, header, body)
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
+def aws(header, validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
