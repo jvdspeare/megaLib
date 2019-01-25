@@ -165,20 +165,20 @@ def service_key_lookup(header, uid=None, prod=True):
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-post
 def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='null', pre_approved='true',
-                active='true', s_time='null', f_time='null', prod=True):
+                active='true', s_time='null', e_time='null', prod=True):
     url = env(prod) + '/v2/service/key'
-    body = [{'productUid': uid,
-             'vlan': vlan,
-             'singleUse': single_use,
-             'maxSpeed': max_speed,
-             'preApproved': pre_approved,
-             'description': desc,
-             'active': active,
-             'validFor': {
-                 'start': s_time,
-                 'end': f_time
-             }}]
-    return port(url, header, body)
+    body = {'productUid': uid,
+            'vlan': vlan,
+            'singleUse': single_use,
+            'maxSpeed': max_speed,
+            'preApproved': pre_approved,
+            'description': desc,
+            'active': active,
+            'validFor': {
+                'start': s_time,
+                'end': e_time
+            }}
+    return post(url, header, body)
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
