@@ -36,6 +36,15 @@ def order_response(response, validate, obj):
         return response
 
 
+# price response
+def price_response(response):
+    json = response[1].json()
+    if response[0] == 200:
+        return response[0], response[1], json['data']['monthlyRate']
+    else:
+        return response
+
+
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
     url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
@@ -223,9 +232,14 @@ def azure_lookup(header, azure_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
-def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, microsoft=True, vlan='null', peering_type='private', auth_key='null',
-        cidr='null', cust_ip='null', aws_ip='null', validate=False, prod=True):
+def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, microsoft=True, vlan='null', validate=False,
+          prod=True):
     url = env(prod) + netdesign_url[validate]
+    peers = []
+    if private is True:
+        peers.append(dict({'type': 'private'}))
+    elif microsoft is True:
+        peers.append(dict({'type': 'microsoft'}))
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -239,9 +253,20 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, micr
                      'partnerConfig': {
                          'connectType': 'AZURE',
                          'serviceKey': azure_key,
-                         'peers': [
-
-                         ]
-                     }
-                 }}]}]
+                         'peers': peers
+                     }}}]}]
     return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
+# https://dev.megaport.com/#price-new-port-price
+def new_port_price(header, loc_id, speed, term, prod=True):
+    url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + '&term=' + \
+          str(term) + '&virtual=false'
+    return price_response(get(url, header))
+
+
+# https://dev.megaport.com/#price-new-mcr-price
+def new_mcr_price(header, loc_id, speed, prod=True):
+    url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + \
+          '&virtual=true'
+    return price_response(get(url, header))
