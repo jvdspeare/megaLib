@@ -1,10 +1,12 @@
 import requests
 import time
 
+# urls
 env_url = ['https://api.megaport.com', 'https://api-staging.megaport.com']
 netdesign_url = {True: '/v2/networkdesign/validate', False: '/v2/networkdesign/buy'}
 
 
+# select environment
 def env(prod):
     if prod is True:
         url = env_url[0]
@@ -22,6 +24,12 @@ def get(url, header=None):
 # api post method template
 def post(url, header=None, body=None):
     response = requests.post(url, headers=header, json=body)
+    return response.status_code, response
+
+
+# api put method template
+def put(url, header=None, body=None):
+    response = requests.put(url, header=header, json=body)
     return response.status_code, response
 
 
@@ -300,10 +308,10 @@ def lifecycle_change_price(header, uid, action, prod=True):
 # https://dev.megaport.com/#invoices-all-invoices
 # https://dev.megaport.com/#invoices-single-invoice
 # https://dev.megaport.com/#invoices-single-invoice-as-pdf
-def invoice(header, invoice_id=False, pdf=False, prod=True):
-    if invoice_id is False:
+def invoice(header, invoice_id=None, pdf=False, prod=True):
+    if invoice_id is None:
         url = env(prod) + '/v2/invoice'
-    elif invoice_id is True and pdf is False:
+    elif invoice_id is not None and pdf is False:
         url = env(prod) + '/v2/invoice/' + invoice_id
     else:
         url = env(prod) + '/v2/invoice/' + invoice_id + '/pdf'
@@ -312,9 +320,52 @@ def invoice(header, invoice_id=False, pdf=False, prod=True):
 
 # https://dev.megaport.com/#general-get-product-list
 # https://dev.megaport.com/#general-get-product-details
-def product(header, uid=False, prod=True):
-    if uid is False:
+def product(header, uid=None, prod=True):
+    if uid is None:
         url = env(prod) + '/v2/products'
     else:
         url = env(prod) + '/v2/products/' + uid
     return get(url, header)
+
+
+# https://dev.megaport.com/#general-update-product-details-port
+def update_port(header, uid, name=None, market_vis=None, speed=None, prod=True):
+    url = env(prod) + '/v2/product/' + uid
+    body = dict()
+    if name is not None:
+        body['name'] = name
+    if market_vis is not None:
+        body['marketplaceVisibility'] = market_vis
+    if speed is not None:
+        body['rateLimit'] = speed
+    return put(url, header, body)
+
+
+# https://dev.megaport.com/#general-update-product-details-vxc
+def update_vxc(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=True):
+    url = env(prod) + '/v2/product/vxc/' + uid
+    body = dict()
+    if name is not None:
+        body['name'] = name
+    if speed is not None:
+        body['rateLimit'] = speed
+    if vlan is not None:
+        body['aEndVlan'] = vlan
+    if vlan_b is not None:
+        body['bEndVlan'] = vlan_b
+    return put(url, header, body)
+
+
+# https://dev.megaport.com/#general-update-product-details-ix
+def update_ix(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=True):
+    url = env(prod) + '/v2/product/vxc/' + uid
+    body = dict()
+    if name is not None:
+        body['name'] = name
+    if speed is not None:
+        body['rateLimit'] = speed
+    if vlan is not None:
+        body['aEndVlan'] = vlan
+    if vlan_b is not None:
+        body['bEndVlan'] = vlan_b
+    return put(url, header, body)
