@@ -220,3 +220,28 @@ def azure_lookup(header, azure_key, prod=True):
                json['data'][0]['vlan']
     else:
         return response
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
+def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, microsoft=True, vlan='null', peering_type='private', auth_key='null',
+        cidr='null', cust_ip='null', aws_ip='null', validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': {
+                     'vlan': vlan,
+                 },
+                 'bEnd': {
+                     'productUid': b_uid,
+                     'vlan': b_vlan,
+                     'partnerConfig': {
+                         'connectType': 'AZURE',
+                         'serviceKey': azure_key,
+                         'peers': [
+
+                         ]
+                     }
+                 }}]}]
+    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
