@@ -37,10 +37,10 @@ def order_response(response, validate, obj):
 
 
 # price response
-def price_response(response):
+def price_response(response, obj, b_obj):
     json = response[1].json()
     if response[0] == 200:
-        return response[0], response[1], json['data']['monthlyRate']
+        return response[0], response[1], json['data'][obj], json['data'][b_obj]
     else:
         return response
 
@@ -262,11 +262,59 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, micr
 def new_port_price(header, loc_id, speed, term, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + '&term=' + \
           str(term) + '&virtual=false'
-    return price_response(get(url, header))
+    return price_response(get(url, header), 'monthlyRate', 'currency')
 
 
 # https://dev.megaport.com/#price-new-mcr-price
 def new_mcr_price(header, loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + \
           '&virtual=true'
-    return price_response(get(url, header))
+    return price_response(get(url, header), 'monthlyRate', 'currency')
+
+
+# https://dev.megaport.com/#price-new-vxc-price
+def new_vxc_price(header, loc_id, b_loc_id, speed, prod=True):
+    url = env(prod) + '/v2/pricebook/vxc?aLocationId=' + str(loc_id) + '&speed=' + str(speed) + '&bLocationId=' + \
+          str(b_loc_id)
+    return price_response(get(url, header), 'monthlyRate', 'currency')
+
+
+# https://dev.megaport.com/#price-new-ix-price
+def new_ix_price(header, ix_name, loc_id, speed, prod=True):
+    url = env(prod) + '/v2/pricebook/ix?ixType=' + ix_name + '&portLocationId=' + str(loc_id) + '&speed=' + str(speed)
+    return price_response(get(url, header), 'monthlyRate', 'currency')
+
+
+# https://dev.megaport.com/#price-speed-change-check-price
+def speed_change_price(header, uid, year, month, new_speed, prod=True):
+    url = env(prod) + '/v2/product/' + uid + '/rating/' + str(year) + '/' + str(month) + '?newSpeed=' + str(new_speed)
+    return price_response(get(url, header), 'longTermMonthly', 'delta')
+
+
+# https://dev.megaport.com/#price-lifecycle-action-change-price-check
+def lifecycle_change_price(header, uid, action, prod=True):
+    url = env(prod) + '/v2/product/' + uid + '/action/' + action + '/charges'
+    return get(url, header)
+
+
+# https://dev.megaport.com/#invoices-all-invoices
+# https://dev.megaport.com/#invoices-single-invoice
+# https://dev.megaport.com/#invoices-single-invoice-as-pdf
+def invoice(header, invoice_id=False, pdf=False, prod=True):
+    if invoice_id is False:
+        url = env(prod) + '/v2/invoice'
+    elif invoice_id is True and pdf is False:
+        url = env(prod) + '/v2/invoice/' + invoice_id
+    else:
+        url = env(prod) + '/v2/invoice/' + invoice_id + '/pdf'
+    return get(url, header)
+
+
+# https://dev.megaport.com/#general-get-product-list
+# https://dev.megaport.com/#general-get-product-details
+def product(header, uid=False, prod=True):
+    if uid is False:
+        url = env(prod) + '/v2/products'
+    else:
+        url = env(prod) + '/v2/products/' + uid
+    return get(url, header)
