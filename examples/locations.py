@@ -1,6 +1,7 @@
 import megalib
 y = megalib.login(input('username'), input('password'))
 if y[0] == 200:
-    x = megalib.change_pasw(y[2], input('old password'), input('new password'))
+    x = megalib.locations(y[2])
+    print(x[1].json())
 else:
     print('failed login')
