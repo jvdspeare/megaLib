@@ -199,8 +199,8 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_type='private', auth_key='null',
-        cidr='null', cust_ip='null', aws_ip='null', validate=False, prod=True):
+def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_type='private', auth_key='',
+        cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'productUid': uid,
              'associatedVxcs': [{
