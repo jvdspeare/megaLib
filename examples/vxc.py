@@ -11,6 +11,6 @@ for x in (44, 144):
     else:
         quit(print('failed to deploy megaport ' + str(x)))
 
-v = megalib.vxc(l[2], a[1], a[2], 'vxc', 1000)
+v = megalib.vxc(l[2], a[0], a[1], 'vxc', 1000)
 if v[0] == 200:
     print('vxc deployed successfully')
