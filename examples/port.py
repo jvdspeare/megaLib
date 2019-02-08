@@ -5,7 +5,7 @@ if y[0] == 200:
     if x[0] == 200:
         print('monthly cost ' + str(x[2]))
         z = megalib.port(y[2], 32, 'megaport name', 1000, 'AU')
-        print('Uid' + z[2])
+        print('Uid ' + z[2])
     else:
         print('failed validation')
 else:
