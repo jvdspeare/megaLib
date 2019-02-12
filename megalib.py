@@ -15,10 +15,61 @@ def env(prod):
     return url
 
 
-# api get method template
-def get(url, header=None):
-    response = requests.get(url, headers=header)
-    return response.status_code, response
+# api get class
+class Get(object):
+    def __init__(self, url, header=None):
+        response = requests.get(url, headers=header)
+        self.status_code = response.status_code
+        self.json = response.json()
+
+
+# price response class
+class GetPriceResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.json == 200:
+            self.monthly_rate = x.json['data']['monthlyRate']
+            self.currency = x.json['data']['currency']
+        else:
+            self.monthly_rate = 0
+            self.currency = ''
+
+
+# speed change class
+class GetSpeedChangeResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.json == 200:
+            self.new_monthly_rate = x.json['data']['longTermMonthly']
+            self.currency = x.json['data']['currency']
+            self.delta = x.json['data']['delta']
+        else:
+            self.new_monthly_rate = 0
+            self.currency = ''
+            self.delta = 0
+
+
+# azure lookup class
+class GetAzureLookupResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.json == 200:
+            self.max_speed = x.json['data'][0]['bandwidth']
+            self.primary_target = x.json['data'][0]['megaports'][0]['vxc']
+            self.primary_uid = x.json['data'][0]['megaports'][0]['productUid']
+            self.secondary_target = x.json['data'][0]['megaports'][1]['vxc']
+            self.secondary_uid = x.json['data'][0]['megaports'][1]['productUid']
+            self.b_end_vlan = x.json['data'][0]['vlan']
+        else:
+            self.max_speed = 0
+            self.primary_target = ''
+            self.primary_uid = ''
+            self.secondary_target = ''
+            self.secondary_uid = ''
+            self.b_end_vlan = 0
 
 
 # api post method template
@@ -44,15 +95,6 @@ def order_response(response, validate, obj):
         return response
 
 
-# price response
-def price_response(response, obj, b_obj):
-    json = response[1].json()
-    if response[0] == 200:
-        return response[0], response[1], json['data'][obj], json['data'][b_obj]
-    else:
-        return response
-
-
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
     url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
@@ -74,7 +116,7 @@ def login_token(token, prod=True):
 # https://dev.megaport.com/#security-logout
 def logout(token, prod=True):
     url = env(prod) + '/v2/logout/' + token
-    return get(url)
+    return Get(url)
 
 
 # https://dev.megaport.com/#security-change-password
@@ -86,19 +128,19 @@ def change_pasw(header, old_pasw, new_pasw, prod=True):
 # https://dev.megaport.com/#lists-used-for-ordering-locations
 def locations(header, prod=True):
     url = env(prod) + '/v2/locations'
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-partner-megaports
 def partner(header, prod=True):
     url = env(prod) + '/v2/dropdowns/partner/megaports'
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-internet-exchanges-ix
 def ix_locations(header, loc_id, prod=True):
     url = env(prod) + '/v2/product/ix/types?locationId=' + str(loc_id)
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-port-order
@@ -177,7 +219,7 @@ def service_key_lookup(header, uid=None, prod=True):
         url = env(prod) + '/v2/service/key'
     else:
         url = env(prod) + '/v2/service/key/' + uid
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-post
@@ -228,15 +270,7 @@ def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
 def azure_lookup(header, azure_key, prod=True):
     url = env(prod) + '/v2/secure/Azure/' + azure_key
-    response = get(url, header)
-    json = response[1].json()
-    if response[0] == 200:
-        return response[0], response[1], json['data'][0]['bandwidth'], \
-               json['data'][0]['megaports'][0]['vxc'], json['data'][0]['megaports'][0]['productUid'], \
-               json['data'][0]['megaports'][1]['vxc'], json['data'][0]['megaports'][1]['productUid'], \
-               json['data'][0]['vlan']
-    else:
-        return response
+    return GetAzureLookupResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
@@ -270,39 +304,39 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, micr
 def new_port_price(header, loc_id, speed, term=1, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + '&term=' + \
           str(term) + '&virtual=false'
-    return price_response(get(url, header), 'monthlyRate', 'currency')
+    return GetPriceResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#price-new-mcr-price
 def new_mcr_price(header, loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + \
           '&virtual=true'
-    return price_response(get(url, header), 'monthlyRate', 'currency')
+    return GetPriceResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#price-new-vxc-price
 def new_vxc_price(header, loc_id, b_loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/vxc?aLocationId=' + str(loc_id) + '&speed=' + str(speed) + '&bLocationId=' + \
           str(b_loc_id)
-    return price_response(get(url, header), 'monthlyRate', 'currency')
+    return GetPriceResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#price-new-ix-price
 def new_ix_price(header, ix_name, loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/ix?ixType=' + ix_name + '&portLocationId=' + str(loc_id) + '&speed=' + str(speed)
-    return price_response(get(url, header), 'monthlyRate', 'currency')
+    return GetPriceResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#price-speed-change-check-price
 def speed_change_price(header, uid, year, month, new_speed, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/rating/' + str(year) + '/' + str(month) + '?newSpeed=' + str(new_speed)
-    return price_response(get(url, header), 'longTermMonthly', 'delta')
+    return GetSpeedChangeResponse(Get(url, header))
 
 
 # https://dev.megaport.com/#price-lifecycle-action-change-price-check
 def lifecycle_change_price(header, uid, action, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/action/' + action + '/charges'
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#invoices-all-invoices
@@ -315,7 +349,7 @@ def invoice(header, invoice_id=None, pdf=False, prod=True):
         url = env(prod) + '/v2/invoice/' + invoice_id
     else:
         url = env(prod) + '/v2/invoice/' + invoice_id + '/pdf'
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#general-get-product-list
@@ -325,7 +359,7 @@ def product(header, uid=None, prod=True):
         url = env(prod) + '/v2/products'
     else:
         url = env(prod) + '/v2/products/' + uid
-    return get(url, header)
+    return Get(url, header)
 
 
 # https://dev.megaport.com/#general-update-product-details-port
