@@ -72,10 +72,22 @@ class GetAzureLookupResponse(object):
             self.b_end_vlan = 0
 
 
-# api post method template
-def post(url, header=None, body=None):
-    response = requests.post(url, headers=header, json=body)
-    return response.status_code, response
+# api post
+class Post(object):
+    def __init__(self, url, header=None, body=None):
+        response = requests.post(url, headers=header, json=body)
+        self.status_code = response.status_code
+        self.json = response.json()
+
+
+class PostLoginResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.json == 200:
+            self.header = {'X-Auth-Token': x.json['data']['token'], 'Content-Type': 'application/json'}
+        else:
+            self.header = ''
 
 
 # api put method template
@@ -98,19 +110,13 @@ def order_response(response, validate, obj):
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
     url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
-    response = post(url)
-    if response[0] == 200:
-        json = response[1].json()
-        return response[0], response[1], {'X-Auth-Token': json['data']['token'], 'Content-Type': 'application/json'}, \
-            json['data']['token']
-    else:
-        return response
+    return PostLoginResponse(Post(url))
 
 
 # https://dev.megaport.com/#security-login-with-token
 def login_token(token, prod=True):
     url = env(prod) + '/v2/login/' + token
-    return post(url)
+    return Post(url)
 
 
 # https://dev.megaport.com/#security-logout
@@ -122,7 +128,7 @@ def logout(token, prod=True):
 # https://dev.megaport.com/#security-change-password
 def change_pasw(header, old_pasw, new_pasw, prod=True):
     url = env(prod) + '/v2/password/change?oldPassword=' + old_pasw + '&newPassword=' + new_pasw
-    return post(url, header)
+    return Post(url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-locations
