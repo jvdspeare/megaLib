@@ -28,7 +28,7 @@ class GetPriceResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
         self.json = x.json
-        if x.json == 200:
+        if x.status_code == 200:
             self.monthly_rate = x.json['data']['monthlyRate']
             self.currency = x.json['data']['currency']
         else:
@@ -41,7 +41,7 @@ class GetSpeedChangeResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
         self.json = x.json
-        if x.json == 200:
+        if x.status_code == 200:
             self.new_monthly_rate = x.json['data']['longTermMonthly']
             self.currency = x.json['data']['currency']
             self.delta = x.json['data']['delta']
@@ -56,7 +56,7 @@ class GetAzureLookupResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
         self.json = x.json
-        if x.json == 200:
+        if x.status_code == 200:
             self.max_speed = x.json['data'][0]['bandwidth']
             self.primary_target = x.json['data'][0]['megaports'][0]['vxc']
             self.primary_uid = x.json['data'][0]['megaports'][0]['productUid']
@@ -84,10 +84,28 @@ class PostLoginResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
         self.json = x.json
-        if x.json == 200:
+        if x.status_code == 200:
             self.header = {'X-Auth-Token': x.json['data']['token'], 'Content-Type': 'application/json'}
         else:
             self.header = ''
+
+
+class PostOrderResponse(object):
+    def __init__(self, x, validate, obj):
+        self.status_code = x.status_code
+        self.json = x.json
+        if validate is False and x.status_code == 200:
+            self.uid = x.json['data'][0][obj]
+            self.monthly_rate = 0
+            self.currency = ''
+        elif validate is True and x.status_code == 200:
+            self.uid = ''
+            self.monthly_rate = x.json['data'][0]['price']['monthlyRate']
+            self.currency = x.json['data'][0]['price']['currency']
+        else:
+            self.uid = ''
+            self.monthly_rate = 0
+            self.currency = ''
 
 
 # api put method template
@@ -163,7 +181,7 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'virtual': 'false',
              'market': market
              }]
-    return order_response(post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
@@ -182,7 +200,7 @@ def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False,
              'config': {
                  'mcrAsn': asn
              }}]
-    return order_response(post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
@@ -198,7 +216,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
                  'rateLimit': speed,
                  "vlan": vlan
              }]}]
-    return order_response(post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
@@ -216,7 +234,7 @@ def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=Fa
                      'productUid': b_uid,
                      'vlan': b_vlan
                  }}]}]
-    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-get
@@ -243,7 +261,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
                 'start': s_time,
                 'end': e_time
             }}
-    return post(url, header, body)
+    return Post(url, header, body)
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
@@ -270,7 +288,7 @@ def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_
                  'bEnd': {
                      'productUid': b_uid
                  }}]}]
-    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
@@ -303,7 +321,7 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, micr
                          'serviceKey': azure_key,
                          'peers': peers
                      }}}]}]
-    return order_response(post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#price-new-port-price

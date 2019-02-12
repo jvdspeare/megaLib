@@ -1,6 +1,9 @@
 import megalib
-x = megalib.login(input('username'), input('password'), input('tfa'), False)
-if x[0] == 200:
-    print(x[0], x[1], x[2])
+
+l = megalib.login(input('username'), input('password'), input('tfa'))
+
+if l.status_code == 200:
+    print(l.header)
+
 else:
-    print(x[0], x[1])
+    print('login failed')
