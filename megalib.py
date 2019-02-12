@@ -72,6 +72,19 @@ class GetAzureLookupResponse(object):
             self.b_end_vlan = 0
 
 
+# speed change class
+class GetBandwidthResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.status_code == 200:
+            self.ingress_mbps = x.json['data']['in_mbps']
+            self.egress_mbps = x.json['data']['out_mbps']
+        else:
+            self.ingress_mbps = [0]
+            self.egress_mbps = [0]
+
+
 # api post
 class Post(object):
     def __init__(self, url, header=None, body=None):
@@ -114,6 +127,14 @@ class PostOrderResponse(object):
 class Put(object):
     def __init__(self, url, header=None, body=None):
         response = requests.put(url, header=header, json=body)
+        self.status_code = response.status_code
+        self.json = response.json()
+
+
+# api delete
+class Delete(object):
+    def __init__(self, url, header=None, body=None):
+        response = requests.delete(url, header=header, json=body)
         self.status_code = response.status_code
         self.json = response.json()
 
@@ -420,3 +441,43 @@ def update_ix(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=T
     if vlan_b is not None:
         body['bEndVlan'] = vlan_b
     return Put(url, header, body)
+
+
+# https://dev.megaport.com/#general-update-product-lifecycle-action
+def lifecycle_action(header, uid, action, prod=True):
+    url = env(prod) + '/v2/product/' + uid + '/action/' + action
+    return Post(url, header)
+
+
+# https://dev.megaport.com/#general-lock-product-to-prevent-editing-post
+# al-lock-product-to-prevent-editing-delete
+def product_lock(header, uid, lock=True, prod=True):
+    url = env(prod) + '/v2/product/lock' + uid
+    if lock is True:
+        return Post(url, header)
+    else:
+        return Delete(url, header)
+
+
+# https://dev.megaport.com/#general-interface-logs
+def logs(header, uid, prod=True):
+    url = env(prod) + '/v2/product/' + uid + '/logs'
+    return Get(url, header)
+
+
+# https://dev.megaport.com/#general-bandwidth-usage
+def bandwidth_usage(header, uid, s_time, e_time, prod=True):
+    url = env(prod) + '/v2/graph/mbps?productIdOrUid=' + uid + 'to=' + e_time + 'from=' + s_time
+    return GetBandwidthResponse(Get(url, header))
+
+
+# https://dev.megaport.com/#general-read-and-write-notification-settings
+def notifications(header, prod=True):
+    url = env(prod) + '/v2/notificationPreferences'
+    return Get(url, header)
+
+
+# https://dev.megaport.com/#general-regenerate-loa
+def loa(header, uid, prod=True):
+    url = env(prod) + '/v2/product/' + uid + '/loa'
+    return Get(url, header)
