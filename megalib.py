@@ -80,6 +80,7 @@ class Post(object):
         self.json = response.json()
 
 
+# post login response
 class PostLoginResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
@@ -90,6 +91,7 @@ class PostLoginResponse(object):
             self.header = ''
 
 
+# post order response
 class PostOrderResponse(object):
     def __init__(self, x, validate, obj):
         self.status_code = x.status_code
@@ -108,21 +110,12 @@ class PostOrderResponse(object):
             self.currency = ''
 
 
-# api put method template
-def put(url, header=None, body=None):
-    response = requests.put(url, header=header, json=body)
-    return response.status_code, response
-
-
-# extended response
-def order_response(response, validate, obj):
-    json = response[1].json()
-    if validate is False and response[0] == 200:
-        return response[0], response[1], json['data'][0][obj]
-    elif validate is True and response[0] == 200:
-        return response[0], response[1], json['data'][0]['price']['monthlyRate']
-    else:
-        return response
+# api put
+class Put(object):
+    def __init__(self, url, header=None, body=None):
+        response = requests.put(url, header=header, json=body)
+        self.status_code = response.status_code
+        self.json = response.json()
 
 
 # https://dev.megaport.com/#security-login-with-user-details
@@ -396,7 +389,7 @@ def update_port(header, uid, name=None, market_vis=None, speed=None, prod=True):
         body['marketplaceVisibility'] = market_vis
     if speed is not None:
         body['rateLimit'] = speed
-    return put(url, header, body)
+    return Put(url, header, body)
 
 
 # https://dev.megaport.com/#general-update-product-details-vxc
@@ -411,7 +404,7 @@ def update_vxc(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=
         body['aEndVlan'] = vlan
     if vlan_b is not None:
         body['bEndVlan'] = vlan_b
-    return put(url, header, body)
+    return Put(url, header, body)
 
 
 # https://dev.megaport.com/#general-update-product-details-ix
@@ -426,4 +419,4 @@ def update_ix(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=T
         body['aEndVlan'] = vlan
     if vlan_b is not None:
         body['bEndVlan'] = vlan_b
-    return put(url, header, body)
+    return Put(url, header, body)
