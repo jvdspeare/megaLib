@@ -11,10 +11,10 @@ else:
     print('login failed')
 
 # HTTP Status Code
-print(l.status_code)
+print(auth.status_code)
 
 # Response Body
-print(l.json)
+print(auth.json)
 
 # Header
-print(l.header)
+print(auth.header)
