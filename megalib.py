@@ -267,7 +267,7 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, micr
 
 
 # https://dev.megaport.com/#price-new-port-price
-def new_port_price(header, loc_id, speed, term, prod=True):
+def new_port_price(header, loc_id, speed, term=1, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + '&term=' + \
           str(term) + '&virtual=false'
     return price_response(get(url, header), 'monthlyRate', 'currency')
