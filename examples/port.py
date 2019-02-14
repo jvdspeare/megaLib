@@ -1,12 +1,25 @@
+# Import megalib
 import megalib
-y = megalib.login(input('username'), input('password'))
-if y[0] == 200:
-    x = megalib.port(y[2], 32, 'megaport name', 1000, 'AU', validate=True)
-    if x[0] == 200:
-        print('monthly cost ' + str(x[2]))
-        z = megalib.port(y[2], 32, 'megaport name', 1000, 'AU')
-        print('Uid ' + z[2])
+
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '))
+
+# Verify that authentication was successful before ordering the port
+if auth.status_code == 200:
+
+    # Order Megaport
+    port = megalib.port(auth.header, input('location id: '), input('service name: '), input('speed (1000/10000): '),
+                        'AU')
+
+    # Advise user if port was ordered successfully
+    if port.status_code == 200:
+        print('Port ordered')
+
+    # Advise user if port order failed
     else:
-        print('failed validation')
+        print('Port order failed: ' + str(port.status_code))
+
+# Advise user if the user authentication was unsuccessful
 else:
-    print('failed login')
+    print('login failed')
+
