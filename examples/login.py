@@ -11,5 +11,6 @@ if auth.status_code == 200:
     # Print HTTP Status Code, Response Body & Header
     print(str(auth.status_code), '\n' + str(auth.json) + '\n' + str(auth.header))
 
+# Advise user if login failed
 else:
     print('login failed')
