@@ -7,14 +7,9 @@ auth = megalib.login(input('username: '), input('password: '), input('tfa (leave
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
     print('login successful')
+
+    # Print HTTP Status Code, Response Body & Header
+    print(str(auth.status_code), '\n' + str(auth.json) + '\n' + str(auth.header))
+
 else:
     print('login failed')
-
-# HTTP Status Code
-print(auth.status_code)
-
-# Response Body
-print(auth.json)
-
-# Header
-print(auth.header)
