@@ -1,5 +1,5 @@
 # megaLib
-megaLib is a Python library for the [Megaport API](https://dev.megaport.com/).
+megaLib is a Python library for the [Megaport RESTful API](https://dev.megaport.com/).
 
 [Megaport](https://www.megaport.com/) operates a global, Software Defined Network which enables their customers to 
 manage their connectivity in close to real time.
