@@ -10,7 +10,7 @@ actions one might perform using the API.
 
 ## Who Uses megaLib
 Anyone who has an existing Megaport account and would like to automate Megaport things in Python. If you don't have an 
-account go [signup](https://portal.megaport.com/signup).
+account you can [signup here](https://portal.megaport.com/signup).
 
 ## How it Works
 megaLib is a library which you can call upon in your code. Using the same 
