@@ -20,7 +20,7 @@ If you would like more information on the Megaport API I suggest checking out th
 You can find examples for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples). If that's 
 not enough additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
 
-## Built Wtih
+## Built With
 - [requests](https://github.com/requests/requests) - Python HTTP Requests for Humans
 
 ## License
