@@ -8,17 +8,17 @@ auth = megalib.login(input('username: '), input('password: '), input('tfa (leave
 if auth.status_code == 200:
     print('login successful')
 
-    # Order port using the megalib.port function
+    # Order mcr using the megalib.mcr function
     mcr = megalib.mcr(auth.header, input('location id: '), input('service name: '), input('speed: '),
                       input('market: '), input('asn: '), input('contract term: '), validate=False, prod=True)
 
     # Advise user if mcr order was successful
     if mcr.status_code == 200:
-        print('port ordered successfully')
+        print('mcr ordered successfully')
 
     # Advise user if mcr order failed
     else:
-        print('port order failed')
+        print('mcr order failed')
 
 # Advise user if login failed
 else:
