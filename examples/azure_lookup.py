@@ -1,14 +1,24 @@
+# Import megalib
 import megalib
 
-l = megalib.login(input('username'), input('password'))
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
 
-if l[0] == 200:
-    a = megalib.azure_lookup(l[2], input('azure expressroute key'))
+# Check if logging was successful by observing the HTTP Status Code
+if auth.status_code == 200:
+    print('login successful')
 
-    if a[0] == 200:
-        print('key is valid')
+    # lookup azure service key using the megalib.azure_lookup
+    key = megalib.azure_lookup(auth.header, input('azure expressroute key: '), prod=True)
+
+    # Print response if call successful
+    if key.status_code == 200:
+        print(key.json)
+
+    # Advise user if lookup failed
     else:
-        print('key is invalid')
+        print('azure expressroute key lookup failed')
 
+# Advise user if login failed
 else:
-    print('failed login')
+    print('login failed')

@@ -1,23 +1,27 @@
+# Import megalib
 import megalib
-a = list()
 
-l = megalib.login(input('username'), input('password'))
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
 
-if l[0] == 200:
+# Check if logging was successful by observing the HTTP Status Code
+if auth.status_code == 200:
+    print('login successful')
 
-    y = megalib.port(l[2], 44, 'megaport', 1000, 'AU')
+    # Order VXC to AWS using the megalib.aws function
+    aws = megalib.aws(auth.header, input('uid: '), input('aws target uid: '), input('name: '), input('speed: '),
+                       input('asn: '), input('aws account number: '), input('vlan: '), input('peering type: '),
+                       input('bgp md5 auth key: '), input('advertised routes: '), input('bgp peering ip address: '),
+                       input('aws bgp peering ip address'), validate=False, prod=True)
 
-    if y[0] == 200:
-        print('megaport deployed successfully')
-        v = megalib.aws(l[2], y[2], 'df37ac05-0c21-4292-9729-695f5ea4645d', 'aws vxc', 1000, 123456, '684021030471')
+    # Advise user if order was successful
+    if aws.status_code == 200:
+        print('aws vxc ordered successfully')
 
-        if v[0] == 200:
-            print('vxc deployed successfully')
-        else:
-            print('error, here is what megaport says...' + v[1], v[1].json())
-
+    # Advise user if order failed
     else:
-        print('failed to deploy megaport')
+        print('aws vxc order failed')
 
+# Advise user if login failed
 else:
-    print('failed login')
+    print('login failed')
