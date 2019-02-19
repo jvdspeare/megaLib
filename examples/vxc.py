@@ -1,21 +1,25 @@
+# Import megalib
 import megalib
-a = list()
 
-l = megalib.login(input('username'), input('password'))
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
 
-if l[0] == 200:
+# Check if logging was successful by observing the HTTP Status Code
+if auth.status_code == 200:
+    print('login successful')
 
-    for x in (44, 144):
-        y = megalib.port(l[2], x, 'megaport ' + str(x), 1000, 'AU')
-        if y[0] == 200:
-            a.append(y[2])
-            print('megaport ' +str(x) + ' deployed successfully')
-        else:
-            quit(print('failed to deploy megaport ' + str(x)))
+    # Order vxc using the megalib.vxc function
+    vxc = megalib.vxc(auth.header, input('a end port uid: '), input('b end port uid: '), input('name: '),
+                      input('speed: '), input('a end vlan: '), input('b end vlan'), validate=False, prod=True)
 
-    v = megalib.vxc(l[2], a[0], a[1], 'vxc', 1000)
-    if v[0] == 200:
-        print('vxc deployed successfully')
+    # Advise user if vxc order was successful
+    if vxc.status_code == 200:
+        print('vxc ordered successfully')
 
+    # Advise user if vxc order failed
+    else:
+        print('vxc order failed')
+
+# Advise user if login failed
 else:
-    print('failed login')
+    print('login failed')
