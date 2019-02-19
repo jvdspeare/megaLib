@@ -1,7 +1,24 @@
+# Import megalib
 import megalib
 
-l = megalib.login(input('username'), input('password'))
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
 
-p = megalib.new_port_price(l[2], 44, 1000)
+# Check if logging was successful by observing the HTTP Status Code
+if auth.status_code == 200:
+    print('login successful')
 
-print(str(p.monthly_rate) + p.currency)
+    # Retrieve new port price using the megalib.new_port_price function
+    price = megalib.new_port_price(auth.header, input('location id: '), input('speed: '), input('term: '), prod=True)
+
+    # Print monthly cost
+    if price.status_code == 200:
+        print(price.currency + ' ' + str(price.monthly_rate))
+
+    # Advise user if lookup failed
+    else:
+        print('price lookup failed')
+
+# Advise user if login failed
+else:
+    print('login failed')
