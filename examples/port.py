@@ -15,7 +15,6 @@ if auth.status_code == 200:
     # Advise user if port order was successful
     if port.status_code == 200:
         print('port ordered successfully')
-        print(port.)
 
     # Advise user if port order failed
     else:
