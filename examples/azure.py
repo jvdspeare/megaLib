@@ -1,30 +1,26 @@
+# Import megalib
 import megalib
-a = list()
 
-l = megalib.login(input('username'), input('password'))
+# Authenticate user credentials using the megalib.login function
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
 
-k = input('azure expressroute key')
+# Check if logging was successful by observing the HTTP Status Code
+if auth.status_code == 200:
+    print('login successful')
 
-if l[0] == 200:
-    a = megalib.azure_lookup(l[2], k)
+    # Order VXC to Azure using the megalib.azure function
+    azure = megalib.azure(auth.header, input('uid: '), input('azure target uid: '), input('name: '), input('speed: '),
+                          input('azure end vlan: '), input('azure expressroute key: '), input('private peering: '),
+                          input('microsoft peering: '), input('a end vlan: '), validate=False, prod=True)
 
-    if a[0] == 200:
-        y = megalib.port(l[2], 44, 'megaport', 1000, 'AU')
+    # Advise user if order was successful
+    if azure.status_code == 200:
+        print('azure vxc ordered successfully')
 
-        if y[0] == 200:
-            print('megaport deployed successfully')
-            v = megalib.azure(l[2], y[2], a[4], 'azure vxc', 1000, a[7], k)
-
-            if v[0] == 200:
-                print('vxc deployed successfully')
-            else:
-                print('error, here is what megaport says...' + v[1], v[1].json())
-
-        else:
-            print('failed to deploy megaport')
-
+    # Advise user if order failed
     else:
-        print('failed azure expressroute key lookup')
+        print('azure vxc order failed')
 
+# Advise user if login failed
 else:
-    print('failed login')
+    print('login failed')
