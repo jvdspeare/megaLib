@@ -2,24 +2,25 @@
 import megalib
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '))
+auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
 
-# Verify that authentication was successful before ordering the port
+# Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
+    print('login successful')
 
-    # Order Megaport
-    port = megalib.port(auth.header, input('location id: '), input('service name: '), input('speed (1000/10000): '),
-                        'AU')
+    # Order port using the megalib.port function
+    port = megalib.port(auth.header, input('location id: '), input('service name: '), input('speed: '),
+                        input('market: '), input('contract term: '), validate=False, prod=True)
 
-    # Advise user if port was ordered successfully
+    # Advise user if port order was successful
     if port.status_code == 200:
-        print('Port ordered')
+        print('port ordered successfully')
+        print(port.)
 
     # Advise user if port order failed
     else:
-        print('Port order failed: ' + str(port.status_code))
+        print('port order failed')
 
-# Advise user if the user authentication was unsuccessful
+# Advise user if login failed
 else:
     print('login failed')
-
