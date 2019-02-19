@@ -21,6 +21,11 @@ If you would like more information on the Megaport API I suggest checking out th
 [Megaport Knowledgebase Articles](https://knowledgebase.megaport.com/open-api/) on the API.
 
 ## Usage
+Install megaLib by cloning this git repository to a local directory and executing setup.py:
+```
+$ python setup.py install
+```
+
 You can find examples for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples). If that's 
 not enough additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
 
