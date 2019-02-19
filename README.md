@@ -23,7 +23,7 @@ If you would like more information on the Megaport API I suggest checking out th
 ## Usage
 Install megaLib by cloning this git repository to a local directory and executing setup.py:
 
-<img src="./img/install.png">
+<img src="./img/setup.png">
 
 ```
 $ python setup.py install
