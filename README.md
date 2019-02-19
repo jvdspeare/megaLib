@@ -25,9 +25,6 @@ Install megaLib by cloning this git repository to a local directory and executin
 
 <img src="./img/setup.png">
 
-```
-$ python setup.py install
-```
 
 You can find examples for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples). If that's 
 not enough additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
