@@ -17,7 +17,7 @@ megaLib is a library which you can call upon in your code. Using the same
 [public API for Megaport](https://api.megaport.com/), megaLib simplifies your next Mega Project in Python.
 
 If you would like more information on the Megaport API I suggest checking out the 
-[Megaport API documentation](https://dev.megaport.com/) or the 
+[Megaport API documentation](https://dev.megaport.com/) and the 
 [Megaport Knowledgebase Articles](https://knowledgebase.megaport.com/open-api/) on the API.
 
 ## Usage
