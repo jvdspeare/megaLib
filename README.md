@@ -26,8 +26,8 @@ Install megaLib by cloning this git repository to a local directory and executin
 <img src="./img/setup.png">
 
 
-You can find examples for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples). If that's 
-not enough additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
+You can find example code snippets for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples)
+.  Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
 
 ## Built With
 - [requests](https://github.com/requests/requests) - Python HTTP Requests for Humans
