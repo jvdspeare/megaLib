@@ -1,12 +1,13 @@
 # megaLib
+[![image](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://github.com/jvdspeare/megaLib/blob/master/LICENSE)
+
 megaLib is a Python library for the [Megaport RESTful API](https://dev.megaport.com/).
 
 [Megaport](https://www.megaport.com/) operates a global, Software Defined Network which enables their customers to 
 manage their connectivity in close to real time.
 
-The Megaport API allows customers to interact with their account in the same way as they might using the GUI (in the 
-form of a Web [Portal](https://portal.megaport.com/login)). This Python library provides functions for all the core 
-actions one might perform using the API.
+The Megaport API allows customers to interact with their account in the same way as they might using the 
+[Web Portal](https://portal.megaport.com/login). This library functions as a wrapper for the Megaport API.
 
 ## Who Uses megaLib
 Anyone who has an existing Megaport account and would like to automate Megaport things in Python. If you don't have an 
@@ -20,17 +21,26 @@ If you would like more information on the Megaport API I suggest checking out th
 [Megaport API documentation](https://dev.megaport.com/) and the 
 [Megaport Knowledgebase Articles](https://knowledgebase.megaport.com/open-api/) on the API.
 
-## Usage
+## Installation
+Requests is required, Requests can be installed using pipenv or pip:
+```
+$ pip install requests
+```
+See the [Requests documentation](http://docs.python-requests.org/en/master/user/install/) for alternative installation 
+methods.
+
 Install megaLib by cloning this git repository to a local directory and executing setup.py:
 
 <img src="./img/setup.png">
 
-
-You can find example code snippets for every function [here](https://github.com/jvdspeare/megaLib/tree/master/examples)
-.  Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
-
 ## Built With
-- [requests](https://github.com/requests/requests) - Python HTTP Requests for Humans
+[Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
+
+## Usage
+
+You can find example code snippets for the functions [here](https://github.com/jvdspeare/megaLib/tree/master/examples). 
+Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
+
 
 ## License
 This project is licensed under the MIT License - see 
