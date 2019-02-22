@@ -1,21 +1,22 @@
 # megaLib
 [![image](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://github.com/jvdspeare/megaLib/blob/master/LICENSE)
+[![image](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![image](https://img.shields.io/badge/API-Megaport-red.svg)](https://api.megaport.com/)
 
-megaLib is a Python library for the [Megaport RESTful API](https://dev.megaport.com/).
+
+megaLib is a Python wrapper for the [Megaport RESTful API](https://dev.megaport.com/).
 
 [Megaport](https://www.megaport.com/) operates a global, Software Defined Network which enables their customers to 
-manage their connectivity in close to real time.
-
-The Megaport API allows customers to interact with their account in the same way as they might using the 
-[Web Portal](https://portal.megaport.com/login). This library functions as a wrapper for the Megaport API.
+manage their connectivity in close to real time. The Megaport API allows customers to interact with their account in 
+the same way as they might using the [Web Portal](https://portal.megaport.com/login).
 
 ## Who Uses megaLib
 Anyone who has an existing Megaport account and would like to automate Megaport things in Python. If you don't have an 
 account you can [signup here](https://portal.megaport.com/signup).
 
 ## How it Works
-megaLib is a library which you can call upon in your code. Using the same 
-[public API for Megaport](https://api.megaport.com/), megaLib simplifies your next Mega Project in Python.
+megaLib is a wrapper for the Megaport API which uses the [public API for Megaport](https://api.megaport.com/), 
+simplifying your next Mega Project in Python.
 
 If you would like more information on the Megaport API I suggest checking out the 
 [Megaport API documentation](https://dev.megaport.com/) and the 
