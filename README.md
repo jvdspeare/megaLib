@@ -6,6 +6,8 @@
 
 megaLib is a Python wrapper for the [Megaport RESTful API](https://dev.megaport.com/).
 
+![image](https://i.imgur.com/topjx8v.png)
+
 [Megaport](https://www.megaport.com/) operates a global, Software Defined Network which enables their customers to 
 manage their connectivity in close to real time. The Megaport API allows customers to interact with their account in 
 the same way as they might using the [Web Portal](https://portal.megaport.com/login).
@@ -41,7 +43,6 @@ Install megaLib by cloning this git repository to a local directory and executin
 
 You can find example code snippets for the functions [here](https://github.com/jvdspeare/megaLib/tree/master/examples). 
 Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
-
 
 ## License
 This project is licensed under the MIT License - see 
