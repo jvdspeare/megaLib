@@ -26,15 +26,15 @@ If you would like more information on the Megaport API I suggest checking out th
 
 ## Installation
 Requests is required, Requests can be installed using pipenv or pip:
-```
-$ pip install requests
-```
+
+![image](https://i.imgur.com/5ylIsb3.png)
+
 See the [Requests documentation](http://docs.python-requests.org/en/master/user/install/) for alternative installation 
 methods.
 
 Install megaLib by cloning this git repository to a local directory and executing setup.py:
 
-<img src="./img/setup.png">
+![image](https://i.imgur.com/aMnNJRS.png)
 
 ## Built With
 [Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
