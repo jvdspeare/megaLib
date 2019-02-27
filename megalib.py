@@ -278,10 +278,25 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
     return Post(url, header, body)
 
 
+# mcr attached requires additional configuration
+def mcr_attached(a_mcr, vlan, aws_auto='false', azure_auto='false'):
+    if a_mcr is True:
+        a_end = {'vlan': vlan,
+                 'partnerConfig': {'connectType': 'VROUTER',
+                                   'awsAuto': aws_auto,
+                                   'azureAuto': azure_auto,
+                                   'complete': 'true',
+                                   'error': 'false'}}
+    else:
+        a_end = {'vlan': vlan}
+    return a_end
+
+
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_type='private', auth_key='',
-        cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
+def aws(header, uid, b_uid, name, speed, asn, account_num, a_mcr=False, aws_auto='true', vlan='null',
+        peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
+    a_end = mcr_attached(a_mcr, vlan, aws_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -296,9 +311,7 @@ def aws(header, uid, b_uid, name, speed, asn, account_num, vlan='null', peering_
                      'customerIpAddress': cust_ip,
                      'amazonIpAddress': aws_ip
                  },
-                 'aEnd': {
-                     'vlan': vlan
-                 },
+                 'aEnd': a_end,
                  'bEnd': {
                      'productUid': b_uid
                  }}]}]
@@ -312,21 +325,20 @@ def azure_lookup(header, azure_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
-def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, private=True, microsoft=True, vlan='null', validate=False,
-          prod=True):
+def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, a_mcr=False, azure_auto='true', private=True,
+          microsoft=True, vlan='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     peers = []
     if private is True:
         peers.append(dict({'type': 'private'}))
-    elif microsoft is True:
+    if microsoft is True:
         peers.append(dict({'type': 'microsoft'}))
+    a_end = mcr_attached(a_mcr, vlan, azure_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
                  'rateLimit': speed,
-                 'aEnd': {
-                     'vlan': vlan,
-                 },
+                 'aEnd': a_end,
                  'bEnd': {
                      'productUid': b_uid,
                      'vlan': b_vlan,
