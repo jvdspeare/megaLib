@@ -278,7 +278,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
     return Post(url, header, body)
 
 
-# mcr attached requires additional configuration
+# vxcs attached to an mcr require additional configuration
 def mcr_attached(a_mcr, vlan, aws_auto='false', azure_auto='false'):
     if a_mcr is True:
         a_end = {'vlan': vlan,
