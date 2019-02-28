@@ -15,6 +15,30 @@ def env(prod):
     return url
 
 
+# vxcs attached to an mcr require additional configuration
+def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false'):
+    if mcr_connect is True:
+        if aws_auto or azure_auto == 'true':
+            ab_end = {'vlan': vlan,
+                      'partnerConfig': {'connectType': 'VROUTER',
+                                        'awsAuto': aws_auto,
+                                        'azureAuto': azure_auto,
+                                        'complete': 'true',
+                                        'error': 'false'}}
+        else:
+            ab_end = {'vlan': vlan,
+                      'partnerConfig': {'connectType': 'VROUTER',
+                                        'interfaces': [{'ipAddresses': [''],
+                                                        'bgpConnections': [],
+                                                        'ipRoutes': [],
+                                                        'natIpAddresses': []}],
+                                        'complete': 'true',
+                                        'error': 'false'}}
+    else:
+        ab_end = {'vlan': vlan}
+    return ab_end
+
+
 # api get class
 class Get(object):
     def __init__(self, url, header=None):
@@ -278,25 +302,11 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
     return Post(url, header, body)
 
 
-# vxcs attached to an mcr require additional configuration
-def mcr_attached(a_mcr, vlan, aws_auto='false', azure_auto='false'):
-    if a_mcr is True:
-        a_end = {'vlan': vlan,
-                 'partnerConfig': {'connectType': 'VROUTER',
-                                   'awsAuto': aws_auto,
-                                   'azureAuto': azure_auto,
-                                   'complete': 'true',
-                                   'error': 'false'}}
-    else:
-        a_end = {'vlan': vlan}
-    return a_end
-
-
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, asn, account_num, a_mcr=False, aws_auto='true', vlan='null',
+def aws(header, uid, b_uid, name, speed, asn, account_num, mcr_connect=False, aws_auto='true', vlan='null',
         peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
-    a_end = mcr_attached(a_mcr, vlan, aws_auto)
+    a_end = mcr_attached(mcr_connect, vlan, aws_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -325,7 +335,7 @@ def azure_lookup(header, azure_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
-def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, a_mcr=False, azure_auto='true', private=True,
+def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False, azure_auto='true', private=True,
           microsoft=True, vlan='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     peers = []
@@ -333,7 +343,7 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, a_mcr=False, azure
         peers.append(dict({'type': 'private'}))
     if microsoft is True:
         peers.append(dict({'type': 'microsoft'}))
-    a_end = mcr_attached(a_mcr, vlan, azure_auto)
+    a_end = mcr_attached(mcr_connect, vlan, azure_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
