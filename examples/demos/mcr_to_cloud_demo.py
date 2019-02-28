@@ -1,37 +1,42 @@
 # Import megalib
 import megalib
 
-# Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '))
+# Authenticate user credentials
+auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not required): '))
 
-# Check if logging was successful by observing the HTTP Status Code
+# Check if logging was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login successful')
 
     # Get locations
-    loc = megalib.locations(auth.header).json
+    loc = megalib.locations(auth.header)
 
-    loc_data = loc['data']
+    # Check if locations where retrieved successful
+    if loc.status_code == 200:
+        print('Locations retrieved successfully')
+        loc_data = loc.json['data']
+        loc_id_list = []
+        x = 0
 
-    loc_id_list = []
+        # MCR locations list
+        for L in loc_data:
+            if L['vRouterAvailable'] is True:
+                loc_id_list.append(L['id'])
+                print('[' + str(x) + '] ' + str(L['name']))
+                x += 1
 
-    x = 0
+        # Select MCR
+        loc_id = loc_id_list[int(input('Select MCR: '))]
 
-    for L in loc_data:
-        if L['vRouterAvailable'] is True:
-            loc_id_list.append(L['id'])
-            print('[' + str(x) + '] ' + str(L['name']))
-            x += 1
+        # Order MCR
+        mcr = megalib.mcr(auth.header, loc_id, '''Jim's MCR''', 100, 'AU')
 
-    # Order MCR using the megalib.mcr function
-    mcr = megalib.mcr(auth.header, input('location id: '), input('service name: '), input('speed: '), input('market: '))
+        # Check if locations where retrieved successful
+        if mcr.status_code == 200:
+            print('MCR ordered successfully')
 
-    # Advise user if mcr order was successful
-    if mcr.status_code == 200:
-        print('mcr ordered successfully')
-
-        # Order VXC to AWS using the megalib.aws function
-        vxc = megalib.aws(auth.header, mcr.uid, )
+            # Order VXC to AWS using the megalib.aws function
+            vxc = megalib.aws(auth.header, mcr.uid, )
 
     # Advise user if mcr order failed
     else:
