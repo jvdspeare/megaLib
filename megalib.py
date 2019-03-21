@@ -303,7 +303,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, asn, account_num, mcr_connect=False, aws_auto='true', vlan='null',
+def aws(header, uid, b_uid, name, speed, aws_asn, account_num, asn='', mcr_connect=False, aws_auto='true', vlan='null',
         peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, aws_auto)
@@ -319,7 +319,8 @@ def aws(header, uid, b_uid, name, speed, asn, account_num, mcr_connect=False, aw
                      'authKey': auth_key,
                      'prefixes': cidr,
                      'customerIpAddress': cust_ip,
-                     'amazonIpAddress': aws_ip
+                     'amazonIpAddress': aws_ip,
+                     'amazonAsn': aws_asn
                  },
                  'aEnd': a_end,
                  'bEnd': {
