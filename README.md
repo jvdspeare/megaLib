@@ -36,13 +36,14 @@ Install megaLib by cloning this git repository to a local directory and executin
 
 ![image](https://i.imgur.com/aMnNJRS.png)
 
-## Built With
-[Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
-
 ## Usage
 
 You can find example code snippets for the functions [here](https://github.com/jvdspeare/megaLib/tree/master/examples). 
+Examples of more functional code are [here](https://github.com/jvdspeare/megaLib/tree/master/examples/demos). 
 Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
+
+## Built With
+[Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
 
 ## License
 This project is licensed under the MIT License - see 
