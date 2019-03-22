@@ -10,9 +10,10 @@ if auth.status_code == 200:
 
     # Order VXC to AWS using the megalib.aws function
     aws = megalib.aws(auth.header, input('uid: '), input('aws target uid: '), input('name: '), input('speed: '),
-                       input('asn: '), input('aws account number: '), input('vlan: '), input('peering type: '),
-                       input('bgp md5 auth key: '), input('advertised routes: '), input('bgp peering ip address: '),
-                       input('aws bgp peering ip address'), validate=False, prod=True)
+                      input('aws asn: '), input('aws account number: '), input('asn: '), input('mcr connect: '),
+                      input('aws auto: '), input('vlan: '), input('peering type: '), input('bgp md5 auth key: '),
+                      input('advertised routes: '), input('bgp peering ip address: '),
+                      input('aws bgp peering ip address'), validate=False, prod=True)
 
     # Advise user if order was successful
     if aws.status_code == 200:
