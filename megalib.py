@@ -232,7 +232,8 @@ def ix_locations(header, loc_id, prod=True):
 # https://dev.megaport.com/#standard-api-orders-buy-port-post-1
 # https://dev.megaport.com/#standard-api-orders-validate-lag-order
 # https://dev.megaport.com/#standard-api-orders-buy-lag
-def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', market='null', validate=False, prod=True):
+def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', market='null', validate=False,
+         prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
@@ -251,7 +252,7 @@ def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', m
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
 # https://dev.megaport.com/#standard-api-orders-buy-mcr
-def mcr(header, loc_id, name, speed, market, asn=133937, term=1, validate=False, prod=True):
+def mcr(header, loc_id, name, speed, asn=133937, term=1, market='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
