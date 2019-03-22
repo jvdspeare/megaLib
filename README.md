@@ -20,8 +20,8 @@ Anyone who has an existing Megaport account and would like to automate Megaport 
 account you can [signup here](https://portal.megaport.com/signup).
 
 ## How it Works
-megaLib is a wrapper for the Megaport API which uses the [public API for Megaport](https://api.megaport.com/), 
-simplifying your next Mega Project in Python.
+megaLib functions as a Python wrapper for the [public Megaport API](https://api.megaport.com/) by providing a library of 
+functions to simplify your next mega-project.
 
 If you would like more information on the Megaport API I suggest checking out the 
 [Megaport API documentation](https://dev.megaport.com/) and the 
