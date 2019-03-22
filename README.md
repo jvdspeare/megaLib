@@ -13,7 +13,7 @@ manage their connectivity in close to real time. The Megaport API allows custome
 the same way as they might using the [Web Portal](https://portal.megaport.com/login).
 
 Use the power of megaLib to order your very own virtual router in the cloud with connectivity AWS in just a few lines:
-![image](https://i.imgur.com/z8yuCMt.png)
+![image](https://i.imgur.com/kbaSDp9.png)
 
 ## Who Uses megaLib
 Anyone who has an existing Megaport account and would like to automate Megaport things in Python. If you don't have an 
