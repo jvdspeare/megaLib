@@ -2,7 +2,7 @@
 import megalib
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not enabled): '))
 
 # Order MCR
 mcr = megalib.mcr(auth.header, loc_id, 'megaLib MCR', 100, 'AU')

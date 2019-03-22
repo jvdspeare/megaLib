@@ -130,21 +130,43 @@ class PostLoginResponse(object):
 
 # post order response
 class PostOrderResponse(object):
-    def __init__(self, x, validate, obj):
+    def __init__(self, x, validate, obj, lag_count='null'):
         self.status_code = x.status_code
         self.json = x.json
-        if validate is False and x.status_code == 200:
-            self.uid = x.json['data'][0][obj]
-            self.monthly_rate = 0
-            self.currency = ''
-        elif validate is True and x.status_code == 200:
-            self.uid = ''
-            self.monthly_rate = x.json['data'][0]['price']['monthlyRate']
-            self.currency = x.json['data'][0]['price']['currency']
+        if lag_count is 'null':
+            if validate is False and x.status_code == 200:
+                self.uid = x.json['data'][0][obj]
+                self.monthly_rate = 0
+                self.currency = ''
+            elif validate is True and x.status_code == 200:
+                self.uid = ''
+                self.monthly_rate = x.json['data'][0]['price']['monthlyRate']
+                self.currency = x.json['data'][0]['price']['currency']
+            else:
+                self.uid = ''
+                self.monthly_rate = 0
+                self.currency = ''
         else:
-            self.uid = ''
-            self.monthly_rate = 0
-            self.currency = ''
+            if validate is False and x.status_code == 200:
+                uid_list = []
+                for i in range(lag_count):
+                    uid_list.append(x.json['data'][i][obj])
+                self.uid = uid_list
+                self.monthly_rate = 0
+                self.currency = ''
+            elif validate is True and x.status_code == 200:
+                monthly_rate_list = []
+                currency_list = []
+                for i in range(lag_count):
+                    monthly_rate_list.append(x.json['data'][i]['price']['monthlyRate'])
+                    currency_list.append(x.json['data'][i]['price']['currency'])
+                self.uid = ''
+                self.monthly_rate = monthly_rate_list
+                self.currency = currency_list
+            else:
+                self.uid = ''
+                self.monthly_rate = 0
+                self.currency = ''
 
 
 # api put
@@ -207,7 +229,10 @@ def ix_locations(header, loc_id, prod=True):
 
 # https://dev.megaport.com/#standard-api-orders-validate-port-order
 # https://dev.megaport.com/#standard-api-orders-buy-port
-def port(header, loc_id, name, speed, market, term=1, lag_count='', lag_id='', validate=False, prod=True):
+# https://dev.megaport.com/#standard-api-orders-buy-port-post-1
+# https://dev.megaport.com/#standard-api-orders-validate-lag-order
+# https://dev.megaport.com/#standard-api-orders-buy-lag
+def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', market='null', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
@@ -221,7 +246,7 @@ def port(header, loc_id, name, speed, market, term=1, lag_count='', lag_id='', v
              'aggregationId': lag_id,
              'market': market
              }]
-    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid', lag_count)
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
