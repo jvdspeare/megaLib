@@ -207,7 +207,7 @@ def ix_locations(header, loc_id, prod=True):
 
 # https://dev.megaport.com/#standard-api-orders-validate-port-order
 # https://dev.megaport.com/#standard-api-orders-buy-port
-def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True):
+def port(header, loc_id, name, speed, market, term=1, lag_count='', lag_id='', validate=False, prod=True):
     url = env(prod) + netdesign_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
@@ -217,6 +217,8 @@ def port(header, loc_id, name, speed, market, term=1, validate=False, prod=True)
              'createDate': int(time.time()),
              'portSpeed': speed,
              'virtual': 'false',
+             'lagPortCount': lag_count,
+             'aggregationId': lag_id,
              'market': market
              }]
     return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
