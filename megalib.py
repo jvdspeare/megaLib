@@ -172,7 +172,7 @@ class PostOrderResponse(object):
 # api put
 class Put(object):
     def __init__(self, url, header=None, body=None):
-        response = requests.put(url, header=header, json=body)
+        response = requests.put(url, headers=header, json=body)
         self.status_code = response.status_code
         self.json = response.json()
 
@@ -180,7 +180,7 @@ class Put(object):
 # api delete
 class Delete(object):
     def __init__(self, url, header=None, body=None):
-        response = requests.delete(url, header=header, json=body)
+        response = requests.delete(url, headers=header, json=body)
         self.status_code = response.status_code
         self.json = response.json()
 
