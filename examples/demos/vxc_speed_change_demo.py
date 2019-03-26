@@ -1,4 +1,4 @@
-# This demo uses schedule - https://pypi.org/project/schedule/ & time
+# This demo requires schedule - https://pypi.org/project/schedule/ & time
 # Import schedule & time
 import schedule
 import time
@@ -18,9 +18,21 @@ def speed_change(header, uid, speed):
 
 
 # Define the schedule
-schedule.every().monday.at('15:22').do(speed_change, auth.header, my_uid, 250)
-schedule.every().monday.at('16:22').do(speed_change, auth.header, my_uid, 350)
-schedule.every().monday.at('17:22').do(speed_change, auth.header, my_uid, 400)
+# This example configures 1000Mbps between 23:50 & 04:00. 200Mbps at all other times.
+schedule.every().monday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().monday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().tuesday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().tuesday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().wednesday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().wednesday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().thursday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().thursday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().friday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().friday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().saturday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().saturday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
+schedule.every().sunday.at('04:00').do(speed_change, auth.header, my_uid, 200)
+schedule.every().sunday.at('23:50').do(speed_change, auth.header, my_uid, 1000)
 
 while True:
     schedule.run_pending()
