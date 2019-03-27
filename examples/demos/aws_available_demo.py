@@ -24,4 +24,3 @@ if loc.status_code and partner_loc.status_code == 200:
 # Advise user if the partner ports call failed
 else:
     print('failed')
-
