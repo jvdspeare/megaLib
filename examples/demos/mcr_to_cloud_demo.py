@@ -31,7 +31,7 @@ if auth.status_code == 200:
         loc_id = loc_id_list[int(input('Select MCR: '))]
 
         # Order MCR
-        mcr = megalib.mcr(auth.header, loc_id, '''Jim's MCR''', 100, 'AU')
+        mcr = megalib.mcr(auth.header, loc_id, '''Jim's MCR''', 100)
 
         # Check if locations where retrieved successful
         if mcr.status_code == 200:
