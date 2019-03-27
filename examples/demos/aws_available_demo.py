@@ -18,7 +18,8 @@ if loc.status_code and partner_loc.status_code == 200:
         for L in partner_loc_data:
             if L['connectType'] == 'AWS' and L['vxcPermitted'] is True:
                 if L['locationId'] == P['id']:
-                    print(P['name'] + ' ' + L['title'] + ' ' + L['productUid'] + ' ' + str(L['locationId']))
+                    print(P['name'] + ' ' + L['title'] + ' productUid: ' + L['productUid'] + ' locationId: ' +
+                          str(L['locationId']))
 
 # Advise user if the partner ports call failed
 else:
