@@ -7,7 +7,7 @@ import time
 import megalib
 
 # Service UID
-my_uid = 'b80ed347-5716-463c-b628-e2be003b636e'
+my_uid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 
 # Authenticate user credentials using the megalib.login function
 auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not enabled): '))
