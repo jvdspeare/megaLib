@@ -3,7 +3,6 @@
 [![image](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![image](https://img.shields.io/badge/API-Megaport-red.svg)](https://api.megaport.com/)
 
-
 megaLib is a Python wrapper for the [Megaport RESTful API](https://dev.megaport.com/).
 
 ![image](https://i.imgur.com/topjx8v.png)
@@ -55,3 +54,6 @@ This project is licensed under the MIT License - see
 ## Disclaimer
 This project including this git repository, is not affiliated, associated, authorized, endorsed by, or in any way 
 officially connected with Megaport, or any of its subsidiaries or its affiliates.
+
+Please refrain from contacting Megaport regarding any issues or support of this project. Instead feel free to submit an 
+issue via this git repository or contact info[dot]megalib[at]gmail.com
