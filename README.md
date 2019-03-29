@@ -48,7 +48,7 @@ Additional resources can be found on the [Wiki](https://github.com/jvdspeare/meg
 [Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
 
 ## License
-This project is licensed under the MIT License - see 
+This project is licensed under the GNU General Public License v3.0 - see 
 [LICENSE](https://github.com/jvdspeare/megaLib/blob/master/LICENSE) for more details.
 
 ## Disclaimer
