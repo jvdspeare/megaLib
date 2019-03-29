@@ -3,7 +3,7 @@ import time
 
 # urls
 env_url = ['https://api.megaport.com', 'https://api-staging.megaport.com']
-netdesign_url = {True: '/v2/networkdesign/validate', False: '/v2/networkdesign/buy'}
+net_design_url = {True: '/v2/networkdesign/validate', False: '/v2/networkdesign/buy'}
 
 
 # select environment
@@ -103,16 +103,12 @@ class GetGoogleLookupResponse(object):
         self.json = x.json
         if x.status_code == 200:
             self.bandwidths = x.json['data']['bandwidths']
-            self.primary_target = x.json['data']['megaports'][0]['vxc']
-            self.primary_uid = x.json['data']['megaports'][0]['productUid']
-            self.secondary_target = x.json['data']['megaports'][1]['vxc']
-            self.secondary_uid = x.json['data']['megaports'][1]['productUid']
+            self.target = x.json['data']['megaports'][0]['vxc']
+            self.uid = x.json['data']['megaports'][0]['productUid']
         else:
             self.bandwidths = 0
-            self.primary_target = ''
-            self.primary_uid = ''
-            self.secondary_target = ''
-            self.secondary_uid = ''
+            self.target = ''
+            self.uid = ''
 
 
 # speed change class
@@ -253,7 +249,7 @@ def ix_locations(header, loc_id, prod=True):
 # https://dev.megaport.com/#standard-api-orders-buy-lag
 def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', market='null', validate=False,
          prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
              'locationUid': 'null',
@@ -272,7 +268,7 @@ def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', m
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
 # https://dev.megaport.com/#standard-api-orders-buy-mcr
 def mcr(header, loc_id, name, speed, asn=133937, term=1, market='null', validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     body = [{'locationId': loc_id,
              'term': term,
              'locationUid': 'null',
@@ -291,7 +287,7 @@ def mcr(header, loc_id, name, speed, asn=133937, term=1, market='null', validate
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
 # https://dev.megaport.com/#standard-api-orders-buy-ix
 def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     body = [{'productUid': uid,
              'associatedIxs': [{
                  'productName': name,
@@ -307,7 +303,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
 # https://dev.megaport.com/#standard-api-orders-buy-vxc
 def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -352,7 +348,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
 def aws(header, uid, b_uid, name, speed, aws_asn, account_num, asn='', mcr_connect=False, aws_auto='true', vlan='null',
         peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, aws_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
@@ -385,7 +381,7 @@ def azure_lookup(header, azure_key, prod=True):
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
 def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False, azure_auto='true', private=True,
           microsoft=True, vlan='null', validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     peers = []
     if private is True:
         peers.append(dict({'type': 'private'}))
@@ -417,7 +413,7 @@ def google_lookup(header, google_key, prod=True):
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-2-buy
 def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto='true', vlan='null',
            validate=False, prod=True):
-    url = env(prod) + netdesign_url[validate]
+    url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, google_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{

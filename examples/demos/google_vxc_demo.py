@@ -8,19 +8,21 @@ auth = megalib.login(input('username: '), input('password: '), input('tfa (leave
 if auth.status_code == 200:
     print('login successful')
 
+    g_key = input('google key: ')
+
     # lookup google key using the megalib.google_lookup
-    key = megalib.google_lookup(auth.header, input('google key: '), prod=True)
+    key = megalib.google_lookup(auth.header, g_key, prod=True)
+
+    # order VXC
+    vxc = megalib.google(auth.header, input('port uid: '), key.uid, 'megaLib google demo', key.bandwidths[0], g_key)
 
     # Print response if call successful
-    if key.status_code == 200:
-        print(key.bandwidths)
-        print(key.target)
-        print(key.uid)
+    if vxc.status_code == 200:
+        print('Great Success!')
 
-    # Advise user if lookup failed
+    # Advise user if failed
     else:
-        print('google key lookup failed')
-        print(key.json)
+        print('failed')
 
 # Advise user if login failed
 else:
