@@ -96,6 +96,25 @@ class GetAzureLookupResponse(object):
             self.b_end_vlan = 0
 
 
+# google lookup class
+class GetGoogleLookupResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.status_code == 200:
+            self.bandwidths = x.json['data']['bandwidths']
+            self.primary_target = x.json['data']['megaports'][0]['vxc']
+            self.primary_uid = x.json['data']['megaports'][0]['productUid']
+            self.secondary_target = x.json['data']['megaports'][1]['vxc']
+            self.secondary_uid = x.json['data']['megaports'][1]['productUid']
+        else:
+            self.bandwidths = 0
+            self.primary_target = ''
+            self.primary_uid = ''
+            self.secondary_target = ''
+            self.secondary_uid = ''
+
+
 # speed change class
 class GetBandwidthResponse(object):
     def __init__(self, x):
@@ -385,6 +404,31 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False,
                          'connectType': 'AZURE',
                          'serviceKey': azure_key,
                          'peers': peers
+                     }}}]}]
+    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-google-step-1-lookup
+def google_lookup(header, google_key, prod=True):
+    url = env(prod) + '/v2/secure/google/' + google_key
+    return GetGoogleLookupResponse(Get(url, header))
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-google-step-2-buy
+def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto='true', vlan='null',
+           validate=False, prod=True):
+    url = env(prod) + netdesign_url[validate]
+    a_end = mcr_attached(mcr_connect, vlan, google_auto)
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': a_end,
+                 'bEnd': {
+                     'productUid': b_uid,
+                     'partnerConfig': {
+                         'connectType': 'GOOGLE',
+                         'pairingKey': google_key
                      }}}]}]
     return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
 
