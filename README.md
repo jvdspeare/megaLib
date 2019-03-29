@@ -51,3 +51,7 @@ Additional resources can be found on the [Wiki](https://github.com/jvdspeare/meg
 ## License
 This project is licensed under the MIT License - see 
 [LICENSE](https://github.com/jvdspeare/megaLib/blob/master/LICENSE) for more details.
+
+## Disclaimer
+This project including this git repository, is not affiliated, associated, authorized, endorsed by, or in any way 
+officially connected with Megaport, or any of its subsidiaries or its affiliates.
