@@ -1,5 +1,5 @@
 # megaLib
-[![image](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://github.com/jvdspeare/megaLib/blob/master/LICENSE)
+[![image](https://img.shields.io/badge/License-GPLv3-lightgrey.svg)](https://github.com/jvdspeare/megaLib/blob/master/LICENSE)
 [![image](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![image](https://img.shields.io/badge/API-Megaport-red.svg)](https://api.megaport.com/)
 
@@ -56,4 +56,4 @@ This project including this git repository, is not affiliated, associated, autho
 officially connected with Megaport, or any of its subsidiaries or its affiliates.
 
 Please refrain from contacting Megaport regarding any issues or support of this project. Instead feel free to submit an 
-issue via this git repository or contact info[dot]megalib[at]gmail.com
+issue via this git repository or contact info[dot]megalib[at]gmail[dot]com
