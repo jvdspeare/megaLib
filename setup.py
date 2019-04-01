@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='megaLib',
-    version='0.92',
+    version='0.93',
     url='https://github.com/jvdspeare/megaLib',
     license='GPLv3',
     author='james.speare',
