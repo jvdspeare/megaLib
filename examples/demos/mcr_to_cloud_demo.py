@@ -1,5 +1,5 @@
 # Import megalib
-import megalib
+from megaLib import megalib
 
 # Authenticate user credentials
 auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not required): '))

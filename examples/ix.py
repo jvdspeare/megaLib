@@ -1,5 +1,5 @@
 # Import megalib
-import megalib
+from megaLib import megalib
 
 # Authenticate user credentials using the megalib.login function
 auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
@@ -10,7 +10,7 @@ if auth.status_code == 200:
 
     # Order is using the megalib.ix function
     ix = megalib.ix(auth.header, input('uid: '), input('service name: '), input('ix name: '),
-                        input('asn: '), input('mac address: '), input('speed: '), input('vlan: '),
+                    input('asn: '), input('mac address: '), input('speed: '), input('vlan: '),
                     validate=False, prod=True)
 
     # Advise user if ix order was successful

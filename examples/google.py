@@ -1,5 +1,5 @@
 # Import megalib
-import megalib
+from megaLib import megalib
 
 # Authenticate user credentials using the megalib.login function
 auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
@@ -10,7 +10,7 @@ if auth.status_code == 200:
 
     # Order VXC to Google using the megalib.google function
     google = megalib.google(auth.header, input('uid: '), input('google target uid: '), input('name: '),
-                           input('speed: '), input('google key: '), validate=False, prod=True)
+                            input('speed: '), input('google key: '), validate=False, prod=True)
 
     # Advise user if order was successful
     if google.status_code == 200:

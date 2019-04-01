@@ -4,7 +4,7 @@ import schedule
 import time
 
 # Import megalib
-import megalib
+from megaLib import megalib
 
 # Service UID
 my_uid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
