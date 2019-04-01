@@ -12,7 +12,7 @@ manage their connectivity in close to real time. The Megaport API allows custome
 the same way as they might using the [Web Portal](https://portal.megaport.com/login).
 
 Use the power of megaLib to order your very own virtual router in the cloud with connectivity AWS in just a few lines:
-![image](https://i.imgur.com/QBO0C9R.png)
+![image](https://i.imgur.com/WlZOkup.png)
 
 ## Who Uses megaLib
 Anyone who has an existing Megaport account and would like to automate Megaport things in Python. If you don't have an 
@@ -34,7 +34,11 @@ Requests is required, Requests can be installed using pipenv or pip:
 See the [Requests documentation](http://docs.python-requests.org/en/master/user/install/) for alternative installation 
 methods.
 
-Install megaLib by cloning this git repository to a local directory, verifying the requirements are met and executing 
+Install megaLib using pip:
+
+![image](https://i.imgur.com/D4xnjpe.png)
+
+Alternatively, install megaLib by cloning this git repository to a local directory, verifying the requirements are met and executing 
 setup.py:
 
 ![image](https://i.imgur.com/wZV9ZsK.png)
