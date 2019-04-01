@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='megaLib',
-    version='0.91',
+    version='0.92',
     packages=['venv.lib.python3.7.site-packages.idna', 'venv.lib.python3.7.site-packages.certifi',
               'venv.lib.python3.7.site-packages.chardet', 'venv.lib.python3.7.site-packages.chardet.cli',
               'venv.lib.python3.7.site-packages.urllib3', 'venv.lib.python3.7.site-packages.urllib3.util',
@@ -11,7 +11,8 @@ setup(
               'venv.lib.python3.7.site-packages.urllib3.packages',
               'venv.lib.python3.7.site-packages.urllib3.packages.backports',
               'venv.lib.python3.7.site-packages.urllib3.packages.ssl_match_hostname',
-              'venv.lib.python3.7.site-packages.requests', 'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip',
+              'venv.lib.python3.7.site-packages.requests', 'venv.lib.python3.7.site-packages.schedule',
+              'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip',
               'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip._vendor',
               'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip._vendor.idna',
               'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip._vendor.pytoml',
@@ -51,8 +52,8 @@ setup(
               'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip._internal.commands',
               'venv.lib.python3.7.site-packages.pip-10.0.1-py3.7.egg.pip._internal.operations'],
     url='https://github.com/jvdspeare/megaLib',
-    license='MIT',
+    license='GPLv3',
     author='james.speare',
-    author_email='jvdspeare@gmail.com',
-    description='megaLib is a Python wrapper for the Megaport RESTful API.'
+    author_email='info.megalib@gmail.com',
+    description='megaLib is a Python wrapper for the Megaport RESTful API'
 )
