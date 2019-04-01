@@ -5,7 +5,7 @@ import time
 import getpass
 
 # Import megalib
-from megaLib import megalib
+import megalib
 
 # Service UID
 my_uid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'

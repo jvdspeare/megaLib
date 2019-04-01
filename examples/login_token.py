@@ -1,5 +1,5 @@
 # Import megalib
-from megaLib import megalib
+import megalib
 
 # Authenticate user token using the megalib.login_token function
 auth = megalib.login_token(input('token: '), prod=False)

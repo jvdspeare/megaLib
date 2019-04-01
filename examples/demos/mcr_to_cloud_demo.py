@@ -1,5 +1,5 @@
 # Import megalib
-from megaLib import megalib
+import megalib
 import getpass
 
 # Authenticate user credentials
