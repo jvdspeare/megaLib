@@ -34,9 +34,16 @@ Requests is required, Requests can be installed using pipenv or pip:
 See the [Requests documentation](http://docs.python-requests.org/en/master/user/install/) for alternative installation 
 methods.
 
-Install megaLib by cloning this git repository to a local directory and executing setup.py:
+Install megaLib by cloning this git repository to a local directory, verifying the requirements are met and executing 
+setup.py:
 
-![image](https://i.imgur.com/aMnNJRS.png)
+```
+$ cd megaLib-master
+$ pip install -r requirements.txt
+$ python setup.py install
+```
+
+![image](https://imgur.com/6xSrMtL.png)
 
 ## Usage
 
