@@ -53,7 +53,7 @@ Additional resources can be found on the [Wiki](https://github.com/jvdspeare/meg
 ## Built With
 [Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
 
-##How to Contribute
+## How to Contribute
 1.  Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
 2.  Fork [the repository](https://github.com/jvdspeare/megaLib) on GitHub to start making your changes to the master 
 branch (or branch off of it).
