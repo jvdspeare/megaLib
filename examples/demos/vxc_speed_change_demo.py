@@ -1,7 +1,8 @@
 # This demo requires schedule - https://pypi.org/project/schedule/ & time
-# Import schedule & time
+# Import schedule, time & getpass
 import schedule
 import time
+import getpass
 
 # Import megalib
 from megaLib import megalib
@@ -10,7 +11,7 @@ from megaLib import megalib
 my_uid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not enabled): '))
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Leave black if not enabled): '))
 
 
 def speed_change(header, uid, speed):

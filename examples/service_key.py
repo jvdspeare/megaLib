@@ -1,8 +1,9 @@
 # Import megalib
 from megaLib import megalib
+import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
+auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '), prod=False)
 
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
@@ -11,7 +12,7 @@ if auth.status_code == 200:
     # Create a service keys for a particular port using the megalib.service_key
     key = megalib.service_key(auth.header, input('port uid: '), input('description: '), input('vlan: '),
                               input('single use: '), input('max speed: '), input('pre-approved: '), input('active: '),
-                              input('start time: '), input('end time: '), prod=True)
+                              input('start time: '), input('end time: '), prod=False)
 
     # Advise user if call successful
     if key.status_code == 200:

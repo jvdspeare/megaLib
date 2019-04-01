@@ -1,15 +1,16 @@
 # Import megalib
 from megaLib import megalib
+import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
+auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '), prod=False)
 
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
     print('login successful')
 
     # Retrieve ix locations using the megalib.ix_locations function
-    loc = megalib.ix_locations(auth.header, input('location id: '), prod=True)
+    loc = megalib.ix_locations(auth.header, input('location id: '), prod=False)
 
     # Check if the ix locations call was successful by observing the HTTP Status Code
     if loc.status_code == 200:

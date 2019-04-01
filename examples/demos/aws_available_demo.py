@@ -1,8 +1,9 @@
 # Import megalib
 from megaLib import megalib
+import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
+auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '), prod=True)
 
 # Get locations and partner locations
 loc = megalib.locations(auth.header)

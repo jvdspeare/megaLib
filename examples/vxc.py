@@ -1,8 +1,9 @@
 # Import megalib
 from megaLib import megalib
+import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=False)
+auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '), prod=False)
 
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
@@ -10,7 +11,7 @@ if auth.status_code == 200:
 
     # Order vxc using the megalib.vxc function
     vxc = megalib.vxc(auth.header, input('a end port uid: '), input('b end port uid: '), input('name: '),
-                      input('speed: '), input('a end vlan: '), input('b end vlan'), validate=False, prod=True)
+                      input('speed: '), input('a end vlan: '), input('b end vlan'), validate=False, prod=False)
 
     # Advise user if vxc order was successful
     if vxc.status_code == 200:

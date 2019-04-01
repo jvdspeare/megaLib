@@ -1,15 +1,16 @@
 # Import megalib
 from megaLib import megalib
+import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), input('password: '), input('tfa (leave black if not enabled): '), prod=True)
+auth = megalib.login(input('username: '), getpass.getpass, input('tfa (leave black if not enabled): '), prod=False)
 
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
     print('login successful')
 
     # Change user password using the megalib.change_pasw function
-    passw = megalib.change_pasw(auth.header, 'old password: ', 'new password: ', prod=True)
+    passw = megalib.change_pasw(auth.header, 'old password: ', 'new password: ', prod=False)
 
     # Check if password change was successful by observing the HTTP Status Code
     if passw.status_code == 200:
