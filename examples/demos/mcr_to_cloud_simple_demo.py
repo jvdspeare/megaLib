@@ -4,10 +4,10 @@ from megaLib import megalib
 # Authenticate user credentials using the megalib.login function
 auth = megalib.login(input('Username: '), input('Password: '), input('TFA (Leave black if not enabled): '))
 
-# Order MCR
-mcr = megalib.mcr(auth.header, loc_id, 'megaLib MCR', 100, 'AU')
+# Order MCR - Replace 'loc_id' with the desired location ID
+mcr = megalib.mcr(auth.header, loc_id, 'megaLib MCR', 100)
 
-# Order AWS VXC
+# Order AWS VXC - Replace 'b_uid' with the desired AWS target UID and 'account_num' with the target AWS account number
 vxc = megalib.aws(auth.header, mcr.uid, b_uid, 'megaLib VXC', 100, 7224, account_num)
 
 # Check for 'Great Success!'
