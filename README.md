@@ -56,4 +56,4 @@ This project including this git repository, is not affiliated, associated, autho
 officially connected with Megaport, or any of its subsidiaries or its affiliates.
 
 Please refrain from contacting Megaport regarding any issues or support of this project. Instead feel free to submit an 
-issue via this git repository or contact info[dot]megalib[at]gmail[dot]com
+issue via this git repository or contact info[dot]megalib[at]gmail[dot]com.
