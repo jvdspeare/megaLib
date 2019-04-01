@@ -2,6 +2,7 @@
 [![image](https://img.shields.io/badge/License-GPLv3-lightgrey.svg)](https://github.com/jvdspeare/megaLib/blob/master/LICENSE)
 [![image](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
 [![image](https://img.shields.io/badge/API-Megaport-red.svg)](https://api.megaport.com/)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/jvdspeare)
 
 megaLib is a Python wrapper for the [Megaport RESTful API](https://dev.megaport.com/).
 
@@ -38,8 +39,8 @@ Install megaLib using pip:
 
 ![image](https://i.imgur.com/D4xnjpe.png)
 
-Alternatively, install megaLib by cloning this git repository to a local directory, verifying the requirements are met and executing 
-setup.py:
+Alternatively, install megaLib by cloning [this git repository](https://github.com/jvdspeare/megaLib) to a local 
+directory, verifying the requirements are met and executing setup.py:
 
 ![image](https://i.imgur.com/wZV9ZsK.png)
 
@@ -51,6 +52,14 @@ Additional resources can be found on the [Wiki](https://github.com/jvdspeare/meg
 
 ## Built With
 [Requests](https://github.com/requests/requests) - Python HTTP Requests for Humans.
+
+##How to Contribute
+1.  Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+2.  Fork [the repository](https://github.com/jvdspeare/megaLib) on GitHub to start making your changes to the master 
+branch (or branch off of it).
+3.  Write a test which shows that the bug was fixed or that the feature
+    works as expected.
+4.  Send a pull request and bug the maintainer until it gets merged and published.
 
 ## License
 This project is licensed under the GNU General Public License v3.0 - see 
