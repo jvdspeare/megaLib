@@ -45,7 +45,10 @@ class Get(object):
     def __init__(self, url, header=None):
         response = requests.get(url, headers=header)
         self.status_code = response.status_code
-        self.json = response.json()
+        if response.status_code == 404:
+            self.json = ''
+        else:
+            self.json = response.json()
 
 
 # price response class
@@ -130,7 +133,10 @@ class Post(object):
     def __init__(self, url, header=None, body=None):
         response = requests.post(url, headers=header, json=body)
         self.status_code = response.status_code
-        self.json = response.json()
+        if response.status_code == 404:
+            self.json = ''
+        else:
+            self.json = response.json()
 
 
 # post login response
@@ -190,7 +196,10 @@ class Put(object):
     def __init__(self, url, header=None, body=None):
         response = requests.put(url, headers=header, json=body)
         self.status_code = response.status_code
-        self.json = response.json()
+        if response.status_code == 404:
+            self.json = ''
+        else:
+            self.json = response.json()
 
 
 # api delete
@@ -198,7 +207,10 @@ class Delete(object):
     def __init__(self, url, header=None, body=None):
         response = requests.delete(url, headers=header, json=body)
         self.status_code = response.status_code
-        self.json = response.json()
+        if response.status_code == 404:
+            self.json = ''
+        else:
+            self.json = response.json()
 
 
 # https://dev.megaport.com/#security-login-with-user-details
