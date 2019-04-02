@@ -472,9 +472,11 @@ def lifecycle_change_price(header, uid, action, prod=True):
 # https://dev.megaport.com/#invoices-all-invoices
 # https://dev.megaport.com/#invoices-single-invoice
 # https://dev.megaport.com/#invoices-single-invoice-as-pdf
-def invoice(header, invoice_id=None, pdf=False, prod=True):
+def invoice(header, invoice_id=None, pdf=False, csv=False, prod=True):
     if invoice_id is None:
         url = env(prod) + '/v2/invoice'
+    elif csv is True:
+        url = env(prod) + '/v2/invoice/csv'
     elif invoice_id is not None and pdf is False:
         url = env(prod) + '/v2/invoice/' + invoice_id
     else:
