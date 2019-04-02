@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='megaLib',
-    version='0.93',
+    version='0.94',
     py_modules=['megalib'],
     install_requires=['requests'],
     url='https://github.com/jvdspeare/megaLib',
