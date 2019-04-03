@@ -40,17 +40,6 @@ def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false'):
     return ab_end
 
 
-# api get class
-class Get(object):
-    def __init__(self, url, header=None):
-        response = requests.get(url, headers=header)
-        self.status_code = response.status_code
-        if response.status_code == 404:
-            self.json = ''
-        else:
-            self.json = response.json()
-
-
 # price response class
 class GetPriceResponse(object):
     def __init__(self, x):
@@ -128,17 +117,6 @@ class GetBandwidthResponse(object):
             self.egress_mbps = [0]
 
 
-# api post
-class Post(object):
-    def __init__(self, url, header=None, body=None):
-        response = requests.post(url, headers=header, json=body)
-        self.status_code = response.status_code
-        if response.status_code == 404:
-            self.json = ''
-        else:
-            self.json = response.json()
-
-
 # post login response
 class PostLoginResponse(object):
     def __init__(self, x):
@@ -191,21 +169,10 @@ class PostOrderResponse(object):
                 self.currency = ''
 
 
-# api put
-class Put(object):
-    def __init__(self, url, header=None, body=None):
-        response = requests.put(url, headers=header, json=body)
-        self.status_code = response.status_code
-        if response.status_code == 404:
-            self.json = ''
-        else:
-            self.json = response.json()
-
-
-# api delete
-class Delete(object):
-    def __init__(self, url, header=None, body=None):
-        response = requests.delete(url, headers=header, json=body)
+# api call multi type
+class Call(object):
+    def __init__(self, call_type, url, header=None, body=None):
+        response = getattr(requests, call_type)(url, headers=header, json=body)
         self.status_code = response.status_code
         if response.status_code == 404:
             self.json = ''
@@ -216,43 +183,43 @@ class Delete(object):
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
     url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
-    return PostLoginResponse(Post(url))
+    return PostLoginResponse(Call('post', url))
 
 
 # https://dev.megaport.com/#security-login-with-token
 def login_token(token, prod=True):
     url = env(prod) + '/v2/login/' + token
-    return Post(url)
+    return Call('post', url)
 
 
 # https://dev.megaport.com/#security-logout
 def logout(token, prod=True):
     url = env(prod) + '/v2/logout/' + token
-    return Get(url)
+    return Call('get', url)
 
 
 # https://dev.megaport.com/#security-change-password
 def change_pasw(header, old_pasw, new_pasw, prod=True):
     url = env(prod) + '/v2/password/change?oldPassword=' + old_pasw + '&newPassword=' + new_pasw
-    return Post(url, header)
+    return Call('post', url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-locations
 def locations(header, prod=True):
     url = env(prod) + '/v2/locations'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-partner-megaports
 def partner(header, prod=True):
     url = env(prod) + '/v2/dropdowns/partner/megaports'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#lists-used-for-ordering-internet-exchanges-ix
 def ix_locations(header, loc_id, prod=True):
     url = env(prod) + '/v2/product/ix/types?locationId=' + str(loc_id)
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-port-order
@@ -275,7 +242,7 @@ def port(header, loc_id, name, speed, term=1, lag_count='null', lag_id='null', m
              'aggregationId': lag_id,
              'market': market
              }]
-    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid', lag_count)
+    return PostOrderResponse(Call('post', url, header, body), validate, 'technicalServiceUid', lag_count)
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-mcr-order
@@ -294,7 +261,7 @@ def mcr(header, loc_id, name, speed, asn=133937, term=1, market='null', validate
              'config': {
                  'mcrAsn': asn
              }}]
-    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
@@ -310,7 +277,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
                  'rateLimit': speed,
                  "vlan": vlan
              }]}]
-    return PostOrderResponse(Post(url, header, body), validate, 'technicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'technicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
@@ -328,7 +295,7 @@ def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=Fa
                      'productUid': b_uid,
                      'vlan': b_vlan
                  }}]}]
-    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-get
@@ -337,7 +304,7 @@ def service_key_lookup(header, uid=None, prod=True):
         url = env(prod) + '/v2/service/key'
     else:
         url = env(prod) + '/v2/service/key/' + uid
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-post
@@ -355,7 +322,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
                 'start': s_time,
                 'end': e_time
             }}
-    return Post(url, header, body)
+    return Call('post', url, header, body)
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
@@ -382,13 +349,13 @@ def aws(header, uid, b_uid, name, speed, aws_asn, account_num, asn='', mcr_conne
                  'bEnd': {
                      'productUid': b_uid
                  }}]}]
-    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
 def azure_lookup(header, azure_key, prod=True):
     url = env(prod) + '/v2/secure/Azure/' + azure_key
-    return GetAzureLookupResponse(Get(url, header))
+    return GetAzureLookupResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
@@ -414,13 +381,13 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False,
                          'serviceKey': azure_key,
                          'peers': peers
                      }}}]}]
-    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-1-lookup
 def google_lookup(header, google_key, prod=True):
     url = env(prod) + '/v2/secure/google/' + google_key
-    return GetGoogleLookupResponse(Get(url, header))
+    return GetGoogleLookupResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-2-buy
@@ -439,46 +406,46 @@ def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, googl
                          'connectType': 'GOOGLE',
                          'pairingKey': google_key
                      }}}]}]
-    return PostOrderResponse(Post(url, header, body), validate, 'vxcJTechnicalServiceUid')
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
 # https://dev.megaport.com/#price-new-port-price
 def new_port_price(header, loc_id, speed, term=1, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + '&term=' + \
           str(term) + '&virtual=false'
-    return GetPriceResponse(Get(url, header))
+    return GetPriceResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#price-new-mcr-price
 def new_mcr_price(header, loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/megaport?locationId=' + str(loc_id) + '&speed=' + str(speed) + \
           '&virtual=true'
-    return GetPriceResponse(Get(url, header))
+    return GetPriceResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#price-new-vxc-price
 def new_vxc_price(header, loc_id, b_loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/vxc?aLocationId=' + str(loc_id) + '&speed=' + str(speed) + '&bLocationId=' + \
           str(b_loc_id)
-    return GetPriceResponse(Get(url, header))
+    return GetPriceResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#price-new-ix-price
 def new_ix_price(header, ix_name, loc_id, speed, prod=True):
     url = env(prod) + '/v2/pricebook/ix?ixType=' + ix_name + '&portLocationId=' + str(loc_id) + '&speed=' + str(speed)
-    return GetPriceResponse(Get(url, header))
+    return GetPriceResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#price-speed-change-check-price
 def speed_change_price(header, uid, year, month, new_speed, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/rating/' + str(year) + '/' + str(month) + '?newSpeed=' + str(new_speed)
-    return GetSpeedChangeResponse(Get(url, header))
+    return GetSpeedChangeResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#price-lifecycle-action-change-price-check
 def lifecycle_change_price(header, uid, action, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/action/' + action + '/charges'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#invoices-all-invoices
@@ -493,7 +460,7 @@ def invoice(header, invoice_id=None, pdf=False, csv=False, prod=True):
         url = env(prod) + '/v2/invoice/' + invoice_id
     else:
         url = env(prod) + '/v2/invoice/' + invoice_id + '/pdf'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#general-get-product-list
@@ -503,7 +470,7 @@ def product(header, uid=None, prod=True):
         url = env(prod) + '/v2/products'
     else:
         url = env(prod) + '/v2/products/' + uid
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#general-update-product-details-port
@@ -516,7 +483,7 @@ def update_port(header, uid, name=None, market_vis=None, speed=None, prod=True):
         body['marketplaceVisibility'] = market_vis
     if speed is not None:
         body['rateLimit'] = speed
-    return Put(url, header, body)
+    return Call('put', url, header, body)
 
 
 # https://dev.megaport.com/#general-update-product-details-vxc
@@ -531,7 +498,7 @@ def update_vxc(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=
         body['aEndVlan'] = vlan
     if vlan_b is not None:
         body['bEndVlan'] = vlan_b
-    return Put(url, header, body)
+    return Call('put', url, header, body)
 
 
 # https://dev.megaport.com/#general-update-product-details-ix
@@ -546,13 +513,13 @@ def update_ix(header, uid, name=None, speed=None, vlan=None, vlan_b=None, prod=T
         body['aEndVlan'] = vlan
     if vlan_b is not None:
         body['bEndVlan'] = vlan_b
-    return Put(url, header, body)
+    return Call('put', url, header, body)
 
 
 # https://dev.megaport.com/#general-update-product-lifecycle-action
 def lifecycle_action(header, uid, action, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/action/' + action
-    return Post(url, header)
+    return Call('post', url, header)
 
 
 # https://dev.megaport.com/#general-lock-product-to-prevent-editing-post
@@ -560,30 +527,30 @@ def lifecycle_action(header, uid, action, prod=True):
 def product_lock(header, uid, lock=True, prod=True):
     url = env(prod) + '/v2/product/lock' + uid
     if lock is True:
-        return Post(url, header)
+        return Call('post', url, header)
     else:
-        return Delete(url, header)
+        return Call('delete', url, header)
 
 
 # https://dev.megaport.com/#general-interface-logs
 def logs(header, uid, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/logs'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#general-bandwidth-usage
 def bandwidth_usage(header, uid, s_time, e_time, prod=True):
     url = env(prod) + '/v2/graph/mbps?productIdOrUid=' + uid + 'to=' + e_time + 'from=' + s_time
-    return GetBandwidthResponse(Get(url, header))
+    return GetBandwidthResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#general-read-and-write-notification-settings
 def notifications(header, prod=True):
     url = env(prod) + '/v2/notificationPreferences'
-    return Get(url, header)
+    return Call('get', url, header)
 
 
 # https://dev.megaport.com/#general-regenerate-loa
 def loa(header, uid, prod=True):
     url = env(prod) + '/v2/product/' + uid + '/loa'
-    return Get(url, header)
+    return Call('get', url, header)
