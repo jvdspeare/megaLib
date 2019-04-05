@@ -17,13 +17,19 @@ def env(prod):
 
 
 # vxcs attached to an mcr require additional configuration
-def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false'):
+def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false', google_auto=False):
     if mcr_connect is True:
         if aws_auto or azure_auto == 'true':
             ab_end = {'vlan': vlan,
                       'partnerConfig': {'connectType': 'VROUTER',
                                         'awsAuto': aws_auto,
                                         'azureAuto': azure_auto,
+                                        'complete': 'true',
+                                        'error': 'false'}}
+        elif google_auto is True:
+            ab_end = {'vlan': vlan,
+                      'partnerConfig': {'connectType': 'VROUTER',
+                                        'interfaces': 'null',
                                         'complete': 'true',
                                         'error': 'false'}}
         else:
@@ -391,7 +397,7 @@ def google_lookup(header, google_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-2-buy
-def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto='true', vlan='null',
+def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto=True, vlan='null',
            validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, google_auto)

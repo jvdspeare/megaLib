@@ -3,7 +3,7 @@ import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '), prod=True)
+auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave black if not enabled): '))
 
 # Check if logging was successful by observing the HTTP Status Code
 if auth.status_code == 200:
