@@ -15,7 +15,7 @@ if auth.status_code == 200:
     key = megalib.google_lookup(auth.header, g_key)
 
     # order VXC
-    vxc = megalib.google(auth.header, input('port uid: '), key.uid, 'megaLib google demo', key.bandwidths[0], g_key,
+    vxc = megalib.google(auth.header, input('mcr uid: '), key.uid, 'megaLib google demo', key.bandwidths[0], g_key,
                          mcr_connect=True)
 
     # Print response if call successful
