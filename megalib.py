@@ -332,7 +332,7 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, aws_asn, account_num, asn='', mcr_connect=False, aws_auto='true', vlan='null',
+def aws(header, uid, b_uid, name, speed, account_num, aws_asn, asn='', mcr_connect=False, aws_auto='true', vlan='null',
         peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, aws_auto)

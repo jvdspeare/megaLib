@@ -3,7 +3,7 @@ import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Leave black if not enabled): '))
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Leave blank if not enabled): '))
 
 # Order MCR - Replace 'loc_id' with the desired location ID
 mcr = megalib.mcr(auth.header, loc_id, 'megaLib MCR', 100)

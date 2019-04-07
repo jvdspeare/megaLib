@@ -11,7 +11,7 @@ import megalib
 my_uid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Leave black if not enabled): '))
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Leave blank if not enabled): '))
 
 
 def speed_change(header, uid, speed):
