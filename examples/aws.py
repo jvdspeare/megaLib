@@ -1,29 +1,27 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
     # Order VXC to AWS using the megalib.aws function
-    aws = megalib.aws(auth.header, input('uid: '), input('aws target uid: '), input('name: '), input('speed: '),
-                      input('aws asn: '), input('aws account number: '), input('asn: '), input('mcr connect: '),
-                      input('aws auto: '), input('vlan: '), input('peering type: '), input('bgp md5 auth key: '),
-                      input('advertised routes: '), input('bgp peering ip address: '),
-                      input('aws bgp peering ip address'), validate=False, prod=False)
+    aws = megalib.aws(auth.header, input('Port UID: '), input('AWS Target Port UID: '), input('VXC Name: '),
+                      input('Speed (Rate Limit): '), input('AWS Account Number: '), input('AWS ASN (Commonly 7224): '),
+                      input('ASN: '), prod=False)
 
     # Advise user if order was successful
     if aws.status_code == 200:
-        print('aws vxc ordered successfully')
+        print('AWS VXC Ordered Successfully')
 
-    # Advise user if order failed
+    # Advise user if order failed, print the status code & JSON
     else:
-        print('aws vxc order failed')
+        print('AWS VXC Order Failed, Status Code: ' + str(aws.status_code) + ', JSON: ' + str(aws.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))

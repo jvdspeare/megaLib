@@ -1,27 +1,41 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
-    # Order VXC to Azure using the megalib.azure function
-    azure = megalib.azure(auth.header, input('uid: '), input('azure target uid: '), input('name: '), input('speed: '),
-                          input('azure end vlan: '), input('azure expressroute key: '), input('private peering: '),
-                          input('microsoft peering: '), input('a end vlan: '), validate=False, prod=False)
+    # Input the Azure Expressroute Key
+    expressroute_key = input('Azure Expressroute Key: ')
 
-    # Advise user if order was successful
-    if azure.status_code == 200:
-        print('azure vxc ordered successfully')
+    # Lookup the Azure Expressroute Key using the megalib.azure_lookup function
+    key = megalib.azure_lookup(auth.header, expressroute_key, prod=False)
 
-    # Advise user if order failed
+    # Observe the HTTP Status Code and advise user if azure lookup was successful
+    if key.status_code == 200:
+        print('Azure Expressroute Key Lookup Successful')
+
+        # Order VXC to Azure using the megalib.azure function
+        # Azure Expressroute Keys have two targets (primary and secondary), this example uses the primary target
+        azure = megalib.azure(auth.header, input('Port UID: '), key.primary_uid, input('VXC Name: '),
+                              input('Speed (Rate Limit): '), key.b_end_vlan, expressroute_key, prod=False)
+
+        # Advise user if order was successful
+        if azure.status_code == 200:
+            print('Azure VXC Ordered Successfully')
+
+        # Advise user if order failed, print the status code & JSON
+        else:
+            print('Azure VXC Order Failed, Status Code: ' + str(azure.status_code) + ', JSON: ' + str(azure.json))
+
+    # Advise user if Azure Expressroute Key lookup failed, print the status code & JSON
     else:
-        print('azure vxc order failed')
+        print('Azure Expressroute Key Lookup Failed, Status Code: ' + str(key.status_code) + ', JSON: ' + str(key.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))
