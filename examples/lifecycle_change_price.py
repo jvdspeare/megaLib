@@ -1,25 +1,26 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
     # Retrieve speed change price using the megalib.speed_change_price function
-    price = megalib.lifecycle_change_price(auth.header, input('uid: '), input('action: '), input('month: '), prod=False)
+    price = megalib.lifecycle_change_price(auth.header, input('Service UID: '),
+                                           input('Action (CANCEL, UN_CANCEL or CANCEL_NOW): '), prod=False)
 
-    # Print json
+    # If Successful Print JSON
     if price.status_code == 200:
         print(price.json)
 
-    # Advise user if lookup failed
+    # Advise user if order failed, print the status code & JSON
     else:
-        print('price lookup failed')
+        print('Lifecycle Price Check Failed, Status Code: ' + str(price.status_code) + ', JSON: ' + str(price.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))

@@ -1,26 +1,26 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
-    # Order mcr using the megalib.mcr function
-    mcr = megalib.mcr(auth.header, input('location id: '), input('service name: '), input('speed: '),
-                      input('market: '), input('asn: '), input('contract term: '), validate=False, prod=False)
+    # Order MCR using the megalib.mcr function
+    mcr = megalib.mcr(auth.header, input('Location ID: '), input('MCR Name: '), input('Speed (Rate Limit: '),
+                      prod=False)
 
-    # Advise user if mcr order was successful
+    # Advise user if MCR order was successful
     if mcr.status_code == 200:
-        print('mcr ordered successfully')
+        print('MCR Ordered Successfully')
 
-    # Advise user if mcr order failed
+    # Advise user if order failed, print the status code & JSON
     else:
-        print('mcr order failed')
+        print('MCR Order Failed, Status Code: ' + str(mcr.status_code) + ', JSON: ' + str(mcr.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))

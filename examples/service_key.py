@@ -1,27 +1,27 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
     # Create a service keys for a particular port using the megalib.service_key
-    key = megalib.service_key(auth.header, input('port uid: '), input('description: '), input('vlan: '),
-                              input('single use: '), input('max speed: '), input('pre-approved: '), input('active: '),
-                              input('start time: '), input('end time: '), prod=False)
+    key = megalib.service_key(auth.header, input('Port UID: '), input('Description: '), input('Vlan: '),
+                              input('Single Use: '), input('Max Speed: '), input('Pre-approved: '), input('Active: '),
+                              input('Start Time: '), input('End Time: '), prod=False)
 
     # Advise user if call successful
     if key.status_code == 200:
-        print('key created successfully')
+        print('key Created Successfully')
 
-    # Advise user if call failed
+    # Advise user if failed to create key, print the status code & JSON
     else:
-        print('failed to create service key')
+        print('Failed To Create Key, Status Code: ' + str(key.status_code) + ', JSON: ' + str(key.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))

@@ -1,26 +1,26 @@
-# Import megalib
+# Import megalib & getpass
 import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('username: '), getpass.getpass(), input('tfa (leave blank if not enabled): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
 
-# Check if logging was successful by observing the HTTP Status Code
+# Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
-    print('login successful')
+    print('Login Successful')
 
-    # Order vxc using the megalib.vxc function
-    vxc = megalib.vxc(auth.header, input('a end port uid: '), input('b end port uid: '), input('name: '),
-                      input('speed: '), input('a end vlan: '), input('b end vlan'), validate=False, prod=False)
+    # Order VXC using the megalib.vxc function
+    vxc = megalib.vxc(auth.header, input('Port UID: '), input('Target Port UID: '), input('VXC Name: '),
+                      input('Speed (Rate Limit): '), prod=False)
 
-    # Advise user if vxc order was successful
+    # Advise user if VXC order was successful
     if vxc.status_code == 200:
-        print('vxc ordered successfully')
+        print('VXC Ordered Successfully')
 
-    # Advise user if vxc order failed
+    # Advise user if order failed, print the status code & JSON
     else:
-        print('vxc order failed')
+        print('VXC Order Failed, Status Code: ' + str(vxc.status_code) + ', JSON: ' + str(vxc.json))
 
-# Advise user if login failed
+# Advise user if login failed, print the status code & JSON
 else:
-    print('login failed')
+    print('Login Failed, Status Code: ' + str(auth.status_code) + ', JSON: ' + str(auth.json))
