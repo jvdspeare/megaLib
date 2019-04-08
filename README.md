@@ -47,7 +47,7 @@ directory, verifying the requirements are met and executing setup.py:
 ## Usage
 
 You can find example code snippets for the functions [here](https://github.com/jvdspeare/megaLib/tree/master/examples). 
-Examples of more functional code are [here](https://github.com/jvdspeare/megaLib/tree/master/examples/demos). 
+Examples of more functional code are [here](https://github.com/jvdspeare/megaLib/tree/master/demos). 
 Additional resources can be found on the [Wiki](https://github.com/jvdspeare/megaLib/wiki).
 
 ## Built With
