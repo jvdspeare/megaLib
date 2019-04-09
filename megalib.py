@@ -390,6 +390,24 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False,
     return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
+# https://dev.megaport.com/#cloud-partner-api-orders-alibaba-buy
+def alibaba(header, uid, b_uid, name, speed, owner_id, mcr_connect=False, vlan='null', validate=False, prod=True):
+    url = env(prod) + net_design_url[validate]
+    a_end = mcr_attached(mcr_connect, vlan)
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': a_end,
+                 'bEnd': {
+                     'productUid': b_uid,
+                     'partnerConfig': {
+                         'vbrOwnerId': owner_id,
+                         'connectType': 'ALIBABA'
+                     }}}]}]
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-1-lookup
 def google_lookup(header, google_key, prod=True):
     url = env(prod) + '/v2/secure/google/' + google_key
