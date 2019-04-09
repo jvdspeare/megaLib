@@ -80,12 +80,12 @@ class GetAzureLookupResponse(object):
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
-            self.max_speed = x.json['data'][0]['bandwidth']
-            self.primary_target = x.json['data'][0]['megaports'][0]['vxc']
-            self.primary_uid = x.json['data'][0]['megaports'][0]['productUid']
-            self.secondary_target = x.json['data'][0]['megaports'][1]['vxc']
-            self.secondary_uid = x.json['data'][0]['megaports'][1]['productUid']
-            self.b_end_vlan = x.json['data'][0]['vlan']
+            self.max_speed = x.json['data']['bandwidth']
+            self.primary_target = x.json['data']['megaports'][0]['vxc']
+            self.primary_uid = x.json['data']['megaports'][0]['productUid']
+            self.secondary_target = x.json['data']['megaports'][1]['vxc']
+            self.secondary_uid = x.json['data']['megaports'][1]['productUid']
+            self.b_end_vlan = x.json['data']['vlan']
         else:
             self.max_speed = 0
             self.primary_target = ''
@@ -360,7 +360,7 @@ def aws(header, uid, b_uid, name, speed, account_num, aws_asn, asn='', mcr_conne
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
 def azure_lookup(header, azure_key, prod=True):
-    url = env(prod) + '/v2/secure/Azure/' + azure_key
+    url = env(prod) + '/v2/secure/azure/' + azure_key
     return GetAzureLookupResponse(Call('get', url, header))
 
 
