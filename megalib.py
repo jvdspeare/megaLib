@@ -102,8 +102,13 @@ class GetGoogleLookupResponse(object):
         self.json = x.json
         if x.status_code == 200:
             self.bandwidths = x.json['data']['bandwidths']
-            self.target = x.json['data']['megaports'][0]['vxc']
-            self.uid = x.json['data']['megaports'][0]['productUid']
+            target_list = []
+            uid_list = []
+            for i in x.json['data']['megaports']:
+                target_list.append(i['vxc'])
+                uid_list.append(i['productUid'])
+            self.target = target_list
+            self.uid = uid_list
         else:
             self.bandwidths = 0
             self.target = ''
