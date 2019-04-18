@@ -200,7 +200,7 @@ def login(user, pasw, tfa=0, prod=True):
 # https://dev.megaport.com/#security-login-with-token
 def login_token(token, prod=True):
     url = env(prod) + '/v2/login/' + token
-    return Call('post', url)
+    return PostLoginResponse(Call('post', url))
 
 
 # https://dev.megaport.com/#security-logout
