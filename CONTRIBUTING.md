@@ -1,6 +1,7 @@
 # Contributing
 When contributing to this repository, please first discuss the change you wish to make via an issue before making a 
-change. Please note we have a code of conduct, we ask that you follow it in all your interactions with the project.
+change. Please note we have a [code of conduct](https://github.com/jvdspeare/megaLib/blob/master/CODE_OF_CONDUCT.md), we 
+ask that you follow it in all your interactions with the project.
 
 ## Questions
 The GitHub issue tracker is for *bug reports*, *feature requests* and *questions*. Make sure that your question is 
