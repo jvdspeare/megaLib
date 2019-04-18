@@ -12,7 +12,8 @@ megaLib is a Python wrapper for the [Megaport RESTful API](https://dev.megaport.
 manage their connectivity in close to real time. The Megaport API allows customers to interact with their account in 
 the same way as they might using the [Web Portal](https://portal.megaport.com/login).
 
-Use the power of megaLib to order your very own virtual router in the cloud with connectivity AWS in just a few lines:
+Use the power of megaLib to order your very own virtual router in the cloud with connectivity to AWS in just a few 
+lines:
 ![image](https://i.imgur.com/WlZOkup.png)
 
 ## Who Uses megaLib
