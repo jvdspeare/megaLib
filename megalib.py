@@ -95,6 +95,26 @@ class GetAzureLookupResponse(object):
             self.b_end_vlan = 0
 
 
+# Oracle & Nutanix lookup class
+class GetLookupResponse(object):
+    def __init__(self, x):
+        self.status_code = x.status_code
+        self.json = x.json
+        if x.status_code == 200:
+            self.bandwidth = x.json['data']['bandwidth']
+            target_list = []
+            uid_list = []
+            for i in x.json['data']['megaports']:
+                target_list.append(i['vxc'])
+                uid_list.append(i['productUid'])
+            self.target = target_list
+            self.uid = uid_list
+        else:
+            self.bandwidth = 0
+            self.target = ''
+            self.uid = ''
+
+
 # google lookup class
 class GetGoogleLookupResponse(object):
     def __init__(self, x):
@@ -395,6 +415,32 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False,
     return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
 
+# https://dev.megaport.com/#cloud-partner-api-orders-oracle-step-1-lookup
+def oracle_lookup(header, oracle_key, prod=True):
+    url = env(prod) + '/v2/secure/oracle/' + oracle_key
+    return GetLookupResponse(Call('get', url, header))
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-oracle-step-2-buy
+def oracle(header, uid, b_uid, name, speed, oracle_key, b_vlan='null', mcr_connect=False, vlan='null', validate=False,
+           prod=True):
+    url = env(prod) + net_design_url[validate]
+    a_end = mcr_attached(mcr_connect, vlan)
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': a_end,
+                 'bEnd': {
+                     'productUid': b_uid,
+                     'vlan': b_vlan,
+                     'partnerConfig': {
+                         'connectType': 'ORACLE',
+                         'virtualCircuitId': oracle_key
+                     }}}]}]
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
 # https://dev.megaport.com/#cloud-partner-api-orders-alibaba-buy
 def alibaba(header, uid, b_uid, name, speed, owner_id, mcr_connect=False, vlan='null', validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
@@ -434,6 +480,30 @@ def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, googl
                      'partnerConfig': {
                          'connectType': 'GOOGLE',
                          'pairingKey': google_key
+                     }}}]}]
+    return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-nutanix-step-1-lookup
+def nutanix_lookup(header, nutanix_key, prod=True):
+    url = env(prod) + '/v2/secure/nutanix/' + nutanix_key
+    return GetLookupResponse(Call('get', url, header))
+
+
+# https://dev.megaport.com/#cloud-partner-api-orders-nutanix-step-2-buy
+def nutanix(header, uid, b_uid, name, speed, nutanix_key, mcr_connect=False, vlan='null', validate=False, prod=True):
+    url = env(prod) + net_design_url[validate]
+    a_end = mcr_attached(mcr_connect, vlan)
+    body = [{'productUid': uid,
+             'associatedVxcs': [{
+                 'productName': name,
+                 'rateLimit': speed,
+                 'aEnd': a_end,
+                 'bEnd': {
+                     'productUid': b_uid,
+                     'partnerConfig': {
+                         'connectType': 'NUTANIX',
+                         'serviceKey': nutanix_key
                      }}}]}]
     return PostOrderResponse(Call('post', url, header, body), validate, 'vxcJTechnicalServiceUid')
 
