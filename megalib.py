@@ -49,6 +49,7 @@ def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false', google
 # price response class
 class GetPriceResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -62,6 +63,7 @@ class GetPriceResponse(object):
 # speed change class
 class GetSpeedChangeResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -77,6 +79,7 @@ class GetSpeedChangeResponse(object):
 # Azure, Oracle & Nutanix lookup class
 class GetLookupResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -97,6 +100,7 @@ class GetLookupResponse(object):
 # google lookup class
 class GetGoogleLookupResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -117,6 +121,7 @@ class GetGoogleLookupResponse(object):
 # speed change class
 class GetBandwidthResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -130,6 +135,7 @@ class GetBandwidthResponse(object):
 # post login response
 class PostLoginResponse(object):
     def __init__(self, x):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if x.status_code == 200:
@@ -141,6 +147,7 @@ class PostLoginResponse(object):
 # post order response
 class PostOrderResponse(object):
     def __init__(self, x, validate, obj, lag_count='null'):
+        self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
         if lag_count is 'null':
@@ -183,6 +190,7 @@ class PostOrderResponse(object):
 class Call(object):
     def __init__(self, call_type, url, header=None, body=None):
         response = getattr(requests, call_type)(url, headers=header, json=body)
+        self.request_body = body
         self.status_code = response.status_code
         if response.status_code == 404:
             self.json = ''
@@ -276,7 +284,7 @@ def mcr(header, loc_id, name, speed, asn=133937, term=1, market='null', validate
 
 # https://dev.megaport.com/#standard-api-orders-validate-ix-order
 # https://dev.megaport.com/#standard-api-orders-buy-ix
-def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False, prod=True):
+def ix(header, uid, name, ix_name, asn, mac, speed, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     body = [{'productUid': uid,
              'associatedIxs': [{
@@ -292,7 +300,7 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan='null', validate=False,
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
 # https://dev.megaport.com/#standard-api-orders-buy-vxc
-def vxc(header, uid, b_uid, name, speed, vlan='null', b_vlan='null', validate=False, prod=True):
+def vxc(header, uid, b_uid, name, speed, vlan=0, b_vlan='null', validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     body = [{'productUid': uid,
              'associatedVxcs': [{
@@ -318,8 +326,8 @@ def service_key_lookup(header, uid=None, prod=True):
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-post
-def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='null', pre_approved='true',
-                active='true', s_time='null', e_time='null', prod=True):
+def service_key(header, uid, desc, vlan=0, single_use='true', max_speed='null', pre_approved='true', active='true',
+                s_time='null', e_time='null', prod=True):
     url = env(prod) + '/v2/service/key'
     body = {'productUid': uid,
             'vlan': vlan,
@@ -337,8 +345,8 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
 def aws(header, uid, b_uid, name, aws_name, speed, account_num, aws_asn, asn='', mcr_connect=False,
-        aws_auto='true', vlan='null', peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='',
-        validate=False, prod=True):
+        aws_auto='true', vlan=0, peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False,
+        prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, aws_auto)
     body = [{'productUid': uid,
@@ -372,7 +380,7 @@ def azure_lookup(header, azure_key, prod=True):
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
 def azure(header, uid, b_uid, name, speed, azure_key, mcr_connect=False, azure_auto='true', private=False,
-          microsoft=False, vlan='null', validate=False, prod=True):
+          microsoft=False, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     peers = []
     if private is True:
@@ -403,7 +411,7 @@ def oracle_lookup(header, oracle_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-oracle-step-2-buy
-def oracle(header, uid, b_uid, name, speed, oracle_key, mcr_connect=False, vlan='null', validate=False, prod=True):
+def oracle(header, uid, b_uid, name, speed, oracle_key, mcr_connect=False, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan)
     body = [{'productUid': uid,
@@ -422,7 +430,7 @@ def oracle(header, uid, b_uid, name, speed, oracle_key, mcr_connect=False, vlan=
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-alibaba-buy
-def alibaba(header, uid, b_uid, name, speed, owner_id, mcr_connect=False, vlan='null', validate=False, prod=True):
+def alibaba(header, uid, b_uid, name, speed, owner_id, mcr_connect=False, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan)
     body = [{'productUid': uid,
@@ -446,8 +454,8 @@ def google_lookup(header, google_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-google-step-2-buy
-def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto=True, vlan='null',
-           validate=False, prod=True):
+def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto=True, vlan=0, validate=False,
+           prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, google_auto)
     body = [{'productUid': uid,
@@ -471,7 +479,7 @@ def nutanix_lookup(header, nutanix_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-nutanix-step-2-buy
-def nutanix(header, uid, b_uid, name, speed, nutanix_key, mcr_connect=False, vlan='null', validate=False, prod=True):
+def nutanix(header, uid, b_uid, name, speed, nutanix_key, mcr_connect=False, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan)
     body = [{'productUid': uid,
