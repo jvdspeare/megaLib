@@ -74,28 +74,7 @@ class GetSpeedChangeResponse(object):
             self.delta = 0
 
 
-# azure lookup class
-class GetAzureLookupResponse(object):
-    def __init__(self, x):
-        self.status_code = x.status_code
-        self.json = x.json
-        if x.status_code == 200:
-            self.max_speed = x.json['data']['bandwidth']
-            self.primary_target = x.json['data']['megaports'][0]['vxc']
-            self.primary_uid = x.json['data']['megaports'][0]['productUid']
-            self.secondary_target = x.json['data']['megaports'][1]['vxc']
-            self.secondary_uid = x.json['data']['megaports'][1]['productUid']
-            self.b_end_vlan = x.json['data']['vlan']
-        else:
-            self.max_speed = 0
-            self.primary_target = ''
-            self.primary_uid = ''
-            self.secondary_target = ''
-            self.secondary_uid = ''
-            self.b_end_vlan = 0
-
-
-# Oracle & Nutanix lookup class
+# Azure, Oracle & Nutanix lookup class
 class GetLookupResponse(object):
     def __init__(self, x):
         self.status_code = x.status_code
@@ -357,8 +336,9 @@ def service_key(header, uid, desc, vlan='null', single_use='true', max_speed='nu
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
-def aws(header, uid, b_uid, name, speed, account_num, aws_asn, asn='', mcr_connect=False, aws_auto='true', vlan='null',
-        peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='', validate=False, prod=True):
+def aws(header, uid, b_uid, name, aws_name, speed, account_num, aws_asn, asn='', mcr_connect=False,
+        aws_auto='true', vlan='null', peering_type='private', auth_key='', cidr='', cust_ip='', aws_ip='',
+        validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan, aws_auto)
     body = [{'productUid': uid,
@@ -368,6 +348,7 @@ def aws(header, uid, b_uid, name, speed, account_num, aws_asn, asn='', mcr_conne
                  'partnerConfigs': {
                      'connectType': 'AWS',
                      'type': peering_type,
+                     'name': aws_name,
                      'asn': asn,
                      'ownerAccount': account_num,
                      'authKey': auth_key,
@@ -386,12 +367,12 @@ def aws(header, uid, b_uid, name, speed, account_num, aws_asn, asn='', mcr_conne
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-1-lookup
 def azure_lookup(header, azure_key, prod=True):
     url = env(prod) + '/v2/secure/azure/' + azure_key
-    return GetAzureLookupResponse(Call('get', url, header))
+    return GetLookupResponse(Call('get', url, header))
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
-def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False, azure_auto='true', private=True,
-          microsoft=True, vlan='null', validate=False, prod=True):
+def azure(header, uid, b_uid, name, speed, azure_key, mcr_connect=False, azure_auto='true', private=False,
+          microsoft=False, vlan='null', validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     peers = []
     if private is True:
@@ -406,7 +387,7 @@ def azure(header, uid, b_uid, name, speed, b_vlan, azure_key, mcr_connect=False,
                  'aEnd': a_end,
                  'bEnd': {
                      'productUid': b_uid,
-                     'vlan': b_vlan,
+                     'vlan': 0,
                      'partnerConfig': {
                          'connectType': 'AZURE',
                          'serviceKey': azure_key,
@@ -422,8 +403,7 @@ def oracle_lookup(header, oracle_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-oracle-step-2-buy
-def oracle(header, uid, b_uid, name, speed, oracle_key, b_vlan='null', mcr_connect=False, vlan='null', validate=False,
-           prod=True):
+def oracle(header, uid, b_uid, name, speed, oracle_key, mcr_connect=False, vlan='null', validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     a_end = mcr_attached(mcr_connect, vlan)
     body = [{'productUid': uid,
@@ -433,7 +413,7 @@ def oracle(header, uid, b_uid, name, speed, oracle_key, b_vlan='null', mcr_conne
                  'aEnd': a_end,
                  'bEnd': {
                      'productUid': b_uid,
-                     'vlan': b_vlan,
+                     'vlan': 0,
                      'partnerConfig': {
                          'connectType': 'ORACLE',
                          'virtualCircuitId': oracle_key

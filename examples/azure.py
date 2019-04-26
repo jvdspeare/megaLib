@@ -3,7 +3,7 @@ import megalib
 import getpass
 
 # Authenticate user credentials using the megalib.login function
-auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=False)
+auth = megalib.login(input('Username: '), getpass.getpass(), input('TFA (Optional): '), prod=True)
 
 # Observe the HTTP Status Code and advise user if login was successful
 if auth.status_code == 200:
@@ -13,7 +13,7 @@ if auth.status_code == 200:
     expressroute_key = input('Azure Expressroute Key: ')
 
     # Lookup the Azure Expressroute Key using the megalib.azure_lookup function
-    key = megalib.azure_lookup(auth.header, expressroute_key, prod=False)
+    key = megalib.azure_lookup(auth.header, expressroute_key, prod=True)
 
     # Observe the HTTP Status Code and advise user if azure lookup was successful
     if key.status_code == 200:
@@ -21,8 +21,8 @@ if auth.status_code == 200:
 
         # Order VXC to Azure using the megalib.azure function
         # Azure Expressroute Keys have two targets (primary and secondary), this example uses the primary target
-        azure = megalib.azure(auth.header, input('Port UID: '), key.primary_uid, input('VXC Name: '),
-                              input('Speed (Rate Limit): '), key.b_end_vlan, expressroute_key, prod=False)
+        azure = megalib.azure(auth.header, input('Port UID: '), key.uid[0], input('VXC Name: '),
+                              input('Speed (Rate Limit): '), expressroute_key, prod=True)
 
         # Advise user if order was successful
         if azure.status_code == 200:
