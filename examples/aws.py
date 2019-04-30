@@ -11,8 +11,10 @@ if auth.status_code == 200:
 
     # Order VXC to AWS using the megalib.aws function
     aws = megalib.aws(auth.header, input('Port UID: '), input('AWS Target Port UID: '), input('VXC Name: '),
-                      input('AWS VIF Name: '), input('Speed (Rate Limit): '), input('AWS Account Number: '),
-                      input('AWS ASN: '), asn=input('ASN (Not Required For VXCs From MCR): '), prod=False)
+                      input('AWS VIF Name: '), int(input('Speed (Rate Limit): ')), input('AWS Account Number: '),
+                      int(input('AWS ASN: ')), asn=int(input('ASN (Not Required For VXCs From MCR): ')), prod=False)
+
+    print(aws.request_body)
 
     # Advise user if order was successful
     if aws.status_code == 200:
