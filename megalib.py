@@ -147,7 +147,7 @@ class PostLoginResponse(object):
 
 # post order response
 class PostOrderResponse(object):
-    def __init__(self, x, validate, obj, lag_count='null'):
+    def __init__(self, x, validate, obj, lag_count=None):
         self.request_body = x.request_body
         self.status_code = x.status_code
         self.json = x.json
