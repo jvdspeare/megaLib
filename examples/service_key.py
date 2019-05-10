@@ -10,9 +10,7 @@ if auth.status_code == 200:
     print('Login Successful')
 
     # Create a service keys for a particular port using the megalib.service_key
-    key = megalib.service_key(auth.header, input('Port UID: '), input('Description: '), input('Vlan: '),
-                              input('Single Use: '), input('Max Speed: '), input('Pre-approved: '), input('Active: '),
-                              input('Start Time: '), input('End Time: '), prod=False)
+    key = megalib.service_key(auth.header, input('Service UID: '), input('Description: '), prod=False)
 
     # Advise user if call successful
     if key.status_code == 200:

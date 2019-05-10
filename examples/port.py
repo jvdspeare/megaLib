@@ -13,8 +13,6 @@ if auth.status_code == 200:
     port = megalib.port(auth.header, int(input('Location ID: ')), input('Port Name: '),
                         int(input('Speed (1000 or 10000): ')), prod=False)
 
-    print(port.request_body)
-
     # Advise user if port order was successful
     if port.status_code == 200:
         print('Port Ordered Successfully')

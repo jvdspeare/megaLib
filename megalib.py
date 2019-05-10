@@ -322,13 +322,13 @@ def service_key_lookup(header, uid=None, prod=True):
     if uid is None:
         url = env(prod) + '/v2/service/key'
     else:
-        url = env(prod) + '/v2/service/key/' + uid
+        url = env(prod) + '/v2/service/key?productIdOrUid=' + uid
     return Call('get', url, header)
 
 
 # https://dev.megaport.com/#standard-api-orders-service-keys-post
-def service_key(header, uid, desc, vlan=0, single_use='true', max_speed=None, pre_approved='true', active='true',
-                s_time=None, e_time=None, prod=True):
+def service_key(header, uid, desc, vlan=0, single_use=True, max_speed=None, pre_approved='true', active='true',
+                e_time='2066-06-06T00:00:00.000Z', prod=True):
     url = env(prod) + '/v2/service/key'
     body = {'productUid': uid,
             'vlan': vlan,
@@ -338,7 +338,7 @@ def service_key(header, uid, desc, vlan=0, single_use='true', max_speed=None, pr
             'description': desc,
             'active': active,
             'validFor': {
-                'start': s_time,
+                'start': int(time.time()),
                 'end': e_time
             }}
     return Call('post', url, header, body)

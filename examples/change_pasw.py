@@ -10,7 +10,7 @@ if auth.status_code == 200:
     print('Login Successful')
 
     # Change user password using the megalib.change_pasw function
-    passw = megalib.change_pasw(auth.header, 'Old Password: ', 'New Password: ', prod=False)
+    passw = megalib.change_pasw(auth.header, input('Old Password: '), input('New Password: '), prod=False)
 
     # Check if password change was successful by observing the HTTP Status Code
     if passw.status_code == 200:

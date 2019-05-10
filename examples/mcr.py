@@ -10,7 +10,7 @@ if auth.status_code == 200:
     print('Login Successful')
 
     # Order MCR using the megalib.mcr function
-    mcr = megalib.mcr(auth.header, input('Location ID: '), input('MCR Name: '), input('Speed (Rate Limit: '),
+    mcr = megalib.mcr(auth.header, input('Location ID: '), input('MCR Name: '), input('Speed (Rate Limit): '),
                       prod=False)
 
     # Advise user if MCR order was successful
