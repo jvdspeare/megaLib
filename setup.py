@@ -6,7 +6,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='megaLib',
-    version='0.9.5.2',
+    version='1.0',
     py_modules=['megalib'],
     install_requires=['requests'],
     url='https://github.com/jvdspeare/megaLib',
