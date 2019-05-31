@@ -628,7 +628,7 @@ def logs(header, uid, prod=True):
 
 # https://dev.megaport.com/#general-bandwidth-usage
 def bandwidth_usage(header, uid, s_time, e_time, prod=True):
-    url = env(prod) + '/v2/graph/mbps?productIdOrUid=' + uid + 'to=' + e_time + 'from=' + s_time
+    url = env(prod) + '/v2/graph/mbps?productIdOrUid=' + uid + '&to=' + e_time + '&from=' + s_time
     return GetBandwidthResponse(Call('get', url, header))
 
 
