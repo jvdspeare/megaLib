@@ -189,8 +189,8 @@ class PostOrderResponse(object):
 
 # api call multi type
 class Call(object):
-    def __init__(self, call_type, url, header=None, body=None):
-        response = getattr(requests, call_type)(url, headers=header, json=body)
+    def __init__(self, call_type, url, header=None, body=None, params=None):
+        response = getattr(requests, call_type)(url, headers=header, json=body, params=params)
         self.request_body = json.dumps(body)
         self.status_code = response.status_code
         if response.status_code == 404:
@@ -201,8 +201,9 @@ class Call(object):
 
 # https://dev.megaport.com/#security-login-with-user-details
 def login(user, pasw, tfa=0, prod=True):
-    url = env(prod) + '/v2/login' + '?username=' + user + '&password=' + pasw + '&oneTimePassword=' + str(tfa)
-    return PostLoginResponse(Call('post', url))
+    url = env(prod) + '/v2/login'
+    params = {'username': user, 'password': pasw, 'oneTimePassword': str(tfa)}
+    return PostLoginResponse(Call('post', url, params=params))
 
 
 # https://dev.megaport.com/#security-login-with-token
