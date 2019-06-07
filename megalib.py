@@ -206,13 +206,6 @@ def login(user, pasw, tfa=0, prod=True):
     return PostLoginResponse(Call('post', url, params=params))
 
 
-# https://dev.megaport.com/#security-login-with-user-details
-# def login_impersonate(user, pasw, target, tfa=0, prod=True):
-#    url = env(prod) + '/v2/login'
-#    params = {'username': user, 'password': pasw, 'target_username': target, 'oneTimePassword': str(tfa)}
-#    return PostLoginResponse(Call('post', url, params=params))
-
-
 # https://dev.megaport.com/#security-login-with-token
 def login_token(token, prod=True):
     url = env(prod) + '/v2/login/' + token
