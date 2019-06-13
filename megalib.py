@@ -614,7 +614,7 @@ def lifecycle_action(header, uid, action, prod=True):
 # https://dev.megaport.com/#general-lock-product-to-prevent-editing-post
 # al-lock-product-to-prevent-editing-delete
 def product_lock(header, uid, lock=True, prod=True):
-    url = env(prod) + '/v2/product/lock' + uid
+    url = env(prod) + '/v2/product/' + uid + '/lock'
     if lock is True:
         return Call('post', url, header)
     else:
