@@ -83,7 +83,8 @@ if auth.status_code == 200:
             account_num = input('AWS Account Number: ')
 
             # Order VXC to AWS using the megalib.aws function
-            vxc = megalib.aws(auth.header, mcr.uid, b_uid, '''Jim's AWS VXC''', 100, 7224, account_num)
+            vxc = megalib.aws(auth.header, mcr.uid, b_uid, '''Jim's AWS VXC''', '''Jim's AWS VXC''',
+                              100, 7224, account_num, mcr_connect=True)
 
             if vxc.status_code == 200:
                 print('VXC ordered successfully')

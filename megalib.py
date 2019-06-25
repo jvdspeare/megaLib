@@ -18,10 +18,10 @@ def env(prod):
 
 
 # vxcs attached to an mcr require additional configuration
-def mcr_attached(mcr_connect, mcr_v2_connect, vlan, bfd=None, ip=None, routes=None, bgp=None, nat=None,
-                 aws_auto='false', azure_auto='false', google_auto=False):
+def mcr_attached(mcr_connect, vlan, bfd=None, ip=None, routes=None, bgp=None, nat=None, aws_auto=False,
+                 azure_auto=False, google_auto=False):
     if mcr_connect is True:
-        if aws_auto or azure_auto == 'true':
+        if aws_auto is True or azure_auto is True:
             ab_end = {'vlan': vlan,
                       'partnerConfig': {'connectType': 'VROUTER',
                                         'awsAuto': aws_auto,
@@ -35,32 +35,23 @@ def mcr_attached(mcr_connect, mcr_v2_connect, vlan, bfd=None, ip=None, routes=No
                                         'complete': 'true',
                                         'error': 'false'}}
         else:
-            ab_end = {'vlan': vlan,
-                      'partnerConfig': {'connectType': 'VROUTER',
-                                        'interfaces': [{'ipAddresses': [''],
-                                                        'bgpConnections': [],
-                                                        'ipRoutes': [],
-                                                        'natIpAddresses': []}],
-                                        'complete': 'true',
-                                        'error': 'false'}}
-    elif mcr_v2_connect is True:
-        ab_end = {
-            'vlan': vlan,
-            'partnerConfig': {
-                'connectType': 'VROUTER',
-                'interfaces': [
-                    {
-                        'bfd': bfd,
-                        'ipAddresses': ip,
-                        'ipRoutes': routes,
-                        'bgpConnections': bgp,
-                        'natIpAddresses': nat
-                    }
-                ],
-                'complete': 'true',
-                'error': 'false'
+            ab_end = {
+                'vlan': vlan,
+                'partnerConfig': {
+                    'connectType': 'VROUTER',
+                    'interfaces': [
+                        {
+                            'bfd': bfd,
+                            'ipAddresses': ip,
+                            'ipRoutes': routes,
+                            'bgpConnections': bgp,
+                            'natIpAddresses': nat
+                        }
+                    ],
+                    'complete': 'true',
+                    'error': 'false'
+                }
             }
-        }
     else:
         ab_end = {'vlan': vlan}
     return ab_end
@@ -321,10 +312,10 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan=0, validate=False, prod
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
 # https://dev.megaport.com/#standard-api-orders-buy-vxc
-def vxc(header, uid, b_uid, name, speed, vlan=0, b_vlan=None, mcr_connect=False, mcr_v2_connect=False, bfd=None,
-        ip=None, routes=None, bgp=None, nat=None, validate=False, prod=True):
+def vxc(header, uid, b_uid, name, speed, vlan=0, b_vlan=None, mcr_connect=False, bfd=None, ip=None, routes=None,
+        bgp=None, nat=None, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
-    a_end = mcr_attached(mcr_connect, mcr_v2_connect, vlan, bfd, ip, routes, bgp, nat)
+    a_end = mcr_attached(mcr_connect, vlan, bfd, ip, routes, bgp, nat)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -366,10 +357,10 @@ def service_key(header, uid, desc, vlan=0, single_use=True, max_speed=None, pre_
 
 # https://dev.megaport.com/#cloud-partner-api-orders-aws-buy
 def aws(header, uid, b_uid, name, aws_name, speed, account_num, aws_asn, asn=None, mcr_connect=False,
-        aws_auto='true', vlan=0, peering_type='private', auth_key=None, cidr=None, cust_ip=None, aws_ip=None,
+        aws_auto=True, vlan=0, peering_type='private', auth_key=None, cidr=None, cust_ip=None, aws_ip=None,
         validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
-    a_end = mcr_attached(mcr_connect, vlan, aws_auto)
+    a_end = mcr_attached(mcr_connect, vlan, aws_auto=aws_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -400,7 +391,7 @@ def azure_lookup(header, azure_key, prod=True):
 
 
 # https://dev.megaport.com/#cloud-partner-api-orders-azure-step-2-buy
-def azure(header, uid, b_uid, name, speed, azure_key, mcr_connect=False, azure_auto='true', private=False,
+def azure(header, uid, b_uid, name, speed, azure_key, mcr_connect=False, azure_auto=True, private=False,
           microsoft=False, vlan=0, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
     peers = []
@@ -408,7 +399,7 @@ def azure(header, uid, b_uid, name, speed, azure_key, mcr_connect=False, azure_a
         peers.append(dict({'type': 'private'}))
     if microsoft is True:
         peers.append(dict({'type': 'microsoft'}))
-    a_end = mcr_attached(mcr_connect, vlan, azure_auto)
+    a_end = mcr_attached(mcr_connect, vlan, azure_auto=azure_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
@@ -478,7 +469,7 @@ def google_lookup(header, google_key, prod=True):
 def google(header, uid, b_uid, name, speed, google_key, mcr_connect=False, google_auto=True, vlan=0, validate=False,
            prod=True):
     url = env(prod) + net_design_url[validate]
-    a_end = mcr_attached(mcr_connect, vlan, google_auto)
+    a_end = mcr_attached(mcr_connect, vlan, google_auto=google_auto)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
