@@ -18,7 +18,8 @@ def env(prod):
 
 
 # vxcs attached to an mcr require additional configuration
-def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false', google_auto=False):
+def mcr_attached(mcr_connect, mcr_v2_connect, vlan, bfd=None, ip=None, routes=None, bgp=None, nat=None,
+                 aws_auto='false', azure_auto='false', google_auto=False):
     if mcr_connect is True:
         if aws_auto or azure_auto == 'true':
             ab_end = {'vlan': vlan,
@@ -42,6 +43,24 @@ def mcr_attached(mcr_connect, vlan, aws_auto='false', azure_auto='false', google
                                                         'natIpAddresses': []}],
                                         'complete': 'true',
                                         'error': 'false'}}
+    elif mcr_v2_connect is True:
+        ab_end = {
+            'vlan': vlan,
+            'partnerConfig': {
+                'connectType': 'VROUTER',
+                'interfaces': [
+                    {
+                        'bfd': bfd,
+                        'ipAddresses': ip,
+                        'ipRoutes': routes,
+                        'bgpConnections': bgp,
+                        'natIpAddresses': nat
+                    }
+                ],
+                'complete': 'true',
+                'error': 'false'
+            }
+        }
     else:
         ab_end = {'vlan': vlan}
     return ab_end
@@ -302,15 +321,15 @@ def ix(header, uid, name, ix_name, asn, mac, speed, vlan=0, validate=False, prod
 
 # https://dev.megaport.com/#standard-api-orders-validate-vxc-order
 # https://dev.megaport.com/#standard-api-orders-buy-vxc
-def vxc(header, uid, b_uid, name, speed, vlan=0, b_vlan=None, validate=False, prod=True):
+def vxc(header, uid, b_uid, name, speed, vlan=0, b_vlan=None, mcr_connect=False, mcr_v2_connect=False, bfd=None,
+        ip=None, routes=None, bgp=None, nat=None, validate=False, prod=True):
     url = env(prod) + net_design_url[validate]
+    a_end = mcr_attached(mcr_connect, mcr_v2_connect, vlan, bfd, ip, routes, bgp, nat)
     body = [{'productUid': uid,
              'associatedVxcs': [{
                  'productName': name,
                  'rateLimit': speed,
-                 'aEnd': {
-                     'vlan': vlan
-                 },
+                 'aEnd': a_end,
                  'bEnd': {
                      'productUid': b_uid,
                      'vlan': b_vlan
