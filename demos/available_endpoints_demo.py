@@ -18,7 +18,7 @@ if auth.status_code == 200:
         print('Locations retrieved successfully')
 
         # Define lists and select is True
-        providers = ['AWS', 'AZURE', 'GOOGLE', 'Finish']
+        providers = ['AWS', 'AZURE', 'GOOGLE', 'ORACLE', 'Finish']
         connect_type = list()
         select = True
 
@@ -28,7 +28,7 @@ if auth.status_code == 200:
                 print(idx, provider)
 
             x = int(input('Select the provider: '))
-            if x == 3:
+            if x == 4:
                 select = False
             else:
                 connect_type.append(providers[x])
