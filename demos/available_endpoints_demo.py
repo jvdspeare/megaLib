@@ -17,31 +17,37 @@ if auth.status_code == 200:
     if loc.status_code and partner_loc.status_code == 200:
         print('Locations retrieved successfully')
 
-        # Define lists and select is True
-        providers = ['AWS', 'AZURE', 'GOOGLE', 'ORACLE', 'Finish']
+        # Define lists and loop
+        providers = ['AWS', 'AZURE', 'GOOGLE', 'ORACLE', 'Show', 'Show & Quit']
         connect_type = list()
-        select = True
+        loop = True
 
-        # Menu
-        while select is True:
-            for idx, provider in enumerate(providers):
-                print(idx, provider)
+        while loop is True:
+            select = True
 
-            x = int(input('Select the provider: '))
-            if x == 4:
-                select = False
-            else:
-                connect_type.append(providers[x])
+            # Menu
+            while select is True:
+                for idx, provider in enumerate(providers):
+                    print(idx, provider)
 
-        # Find results, format and print results
-        for N in connect_type:
-            for P in loc.json['data']:
-                for L in partner_loc.json['data']:
-                    if L['connectType'] == N:
-                        if L['vxcPermitted'] is True:
-                            if L['locationId'] == P['id']:
-                                print(L['connectType'] + ' ' + P['name'] + ' ' + L['title'] + ' productUid: ' +
-                                      L['productUid'] + ' locationId: ' + str(L['locationId']))
+                x = int(input('Select the provider: '))
+                if x == 4:
+                    select = False
+                elif x == 5:
+                    select = False
+                    loop = False
+                else:
+                    connect_type.append(providers[x])
+
+            # Find results, format and print results
+            for N in connect_type:
+                for P in loc.json['data']:
+                    for L in partner_loc.json['data']:
+                        if L['connectType'] == N:
+                            if L['vxcPermitted'] is True:
+                                if L['locationId'] == P['id']:
+                                    print(L['connectType'] + ' ' + P['name'] + ' ' + L['title'] + ' productUid: ' +
+                                          L['productUid'] + ' locationId: ' + str(L['locationId']))
 
 # Advise user if login failed, print the status code & JSON
 else:
