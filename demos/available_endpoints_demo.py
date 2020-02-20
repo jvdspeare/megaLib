@@ -18,7 +18,7 @@ if auth.status_code == 200:
         print('Locations retrieved successfully')
 
         # Define lists and loop
-        providers = ['AWS', 'AZURE', 'GOOGLE', 'ORACLE', 'Show', 'Show & Quit']
+        providers = ['AWS', 'AZURE', 'GOOGLE', 'ORACLE', 'AWSHC', 'SFDC', 'ALIBABA', 'Show', 'Show & Quit']
         connect_type = list()
         loop = True
 
@@ -31,9 +31,9 @@ if auth.status_code == 200:
                     print(idx, provider)
 
                 x = int(input('Select the provider: '))
-                if x == 4:
+                if x == 8:
                     select = False
-                elif x == 5:
+                elif x == 9:
                     select = False
                     loop = False
                 else:
