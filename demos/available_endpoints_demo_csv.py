@@ -46,8 +46,8 @@ if auth.status_code == 200:
                         if L['connectType'] == N:
                             if L['vxcPermitted'] is True:
                                 if L['locationId'] == P['id']:
-                                    print(L['connectType'] + ' ' + P['name'] + ' ' + L['title'] + ' productUid: ' +
-                                          L['productUid'] + ' locationId: ' + str(L['locationId']))
+                                    print(L['connectType'] + ',' + P['name'] + ',' + L['title'] + ',' +
+                                          L['productUid'] + ',' + str(L['locationId']))
 
 # Advise user if login failed, print the status code & JSON
 else:
